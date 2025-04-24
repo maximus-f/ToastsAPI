@@ -1,0 +1,12 @@
+name: toast-api
+version: '${project.version}'
+main: me.perotin.ToastAPI
+api-version: '1.20'
+load: POSTWORLD
+description: A Toast API for Minecraft servers
+
+commands:
+  toast:
+    description: Sends a test toast notification to the player
+    usage: /toast [icon] [message] [style]
+    permission: toast.use
