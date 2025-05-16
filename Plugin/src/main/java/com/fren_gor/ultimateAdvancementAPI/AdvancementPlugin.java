@@ -1,7 +1,6 @@
 package com.fren_gor.ultimateAdvancementAPI;
 
-import com.fren_gor.ultimateAdvancementAPI.commands.CommandAPIManager;
-import com.fren_gor.ultimateAdvancementAPI.commands.CommandAPIManager.ILoadable;
+
 import com.fren_gor.ultimateAdvancementAPI.exceptions.InvalidVersionException;
 import com.fren_gor.ultimateAdvancementAPI.metrics.BStats;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementUtils;
@@ -28,8 +27,8 @@ public class AdvancementPlugin extends JavaPlugin {
     private AdvancementMain main;
     private ConfigManager configManager;
     private boolean correctVersion = true, commandsEnabled = false;
-    @Nullable
-    private ILoadable commandAPIManager;
+    // @Nullable
+    // private ILoadable commandAPIManager;
 
     @Override
     public void onLoad() {
@@ -53,16 +52,16 @@ public class AdvancementPlugin extends JavaPlugin {
             return;
         }
 
-        commandAPIManager = CommandAPIManager.loadManager(main.getLibbyManager());
-        if (commandAPIManager != null) { // In case commands couldn't be loaded
-            try {
-                commandAPIManager.onLoad(main, this);
-            } catch (Throwable t) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] An exception occurred while loading commands for UltimateAdvancementAPI, continuing without them:");
-                t.printStackTrace();
-                commandAPIManager = null;
-            }
-        }
+        // commandAPIManager = CommandAPIManager.loadManager(main.getLibbyManager());
+        // if (commandAPIManager != null) { // In case commands couldn't be loaded
+        //     try {
+        //         commandAPIManager.onLoad(main, this);
+        //     } catch (Throwable t) {
+        //         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] An exception occurred while loading commands for UltimateAdvancementAPI, continuing without them:");
+        //         t.printStackTrace();
+        //         commandAPIManager = null;
+        //     }
+        // }
     }
 
     @Override
@@ -88,15 +87,15 @@ public class AdvancementPlugin extends JavaPlugin {
             return;
         }
 
-        if (commandAPIManager != null) { // In case commands couldn't be loaded
-            try {
-                commandAPIManager.onEnable();
-                commandsEnabled = true;
-            } catch (Throwable t) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] An exception occurred while enabling commands for UltimateAdvancementAPI, continuing without them:");
-                t.printStackTrace();
-            }
-        }
+        // if (commandAPIManager != null) { // In case commands couldn't be loaded
+        //     try {
+        //         commandAPIManager.onEnable();
+        //         commandsEnabled = true;
+            // } catch (Throwable t) {
+            //     Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] An exception occurred while enabling commands for UltimateAdvancementAPI, continuing without them:");
+            //     t.printStackTrace();
+            // }
+        
 
         if (configManager.getDisableVanillaAdvancements()) {
             new BukkitRunnable() {
@@ -121,14 +120,7 @@ public class AdvancementPlugin extends JavaPlugin {
         if (!correctVersion) {
             return;
         }
-        if (commandAPIManager != null && commandsEnabled) { // In case commands are not loaded/enabled
-            try {
-                commandAPIManager.onDisable();
-            } catch (Throwable t) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[UltimateAdvancementAPI] An exception occurred while disabling commands for UltimateAdvancementAPI:");
-                t.printStackTrace();
-            }
-        }
+       
         main.disable();
         main = null;
     }
