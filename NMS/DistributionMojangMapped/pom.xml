@@ -23,6 +23,12 @@
             <version>${project.version}</version>
             <classifier>mojang-mapped</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-1_21_R4</artifactId>
+            <version>${project.version}</version>
+            <classifier>mojang-mapped</classifier>
+        </dependency>
     </dependencies>
 
     <build>

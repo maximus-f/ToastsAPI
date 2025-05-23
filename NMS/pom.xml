@@ -25,6 +25,7 @@
     <modules>
         <module>Common</module>
         <module>1_20_R1</module>
+        <module>1_21_R4</module>
         <module>Distribution</module>
         <module>DistributionMojangMapped</module>
     </modules>
