@@ -131,7 +131,14 @@ public class ReflectionUtil {
         try {
             return Class.forName(wrapper).asSubclass(clazz);
         } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().severe("[ToastAPI] Can't find Wrapper Class! (" + wrapper + ")");
+            if (version.get().equals("v1_21_R4")) {
+                Bukkit.getLogger().severe("[ToastAPI] Minecraft 1.21.4+ support is not included in this build.");
+                Bukkit.getLogger().severe("[ToastAPI] 1.21.4+ requires Java 21 and has significant NMS API changes.");
+                Bukkit.getLogger().severe("[ToastAPI] Please use this plugin on Minecraft 1.15-1.21.3 servers.");
+                Bukkit.getLogger().severe("[ToastAPI] For 1.21.4+ support, check for updated releases.");
+            } else {
+                Bukkit.getLogger().severe("[ToastAPI] Can't find Wrapper Class! (" + wrapper + ")");
+            }
             return null;
         }
     }

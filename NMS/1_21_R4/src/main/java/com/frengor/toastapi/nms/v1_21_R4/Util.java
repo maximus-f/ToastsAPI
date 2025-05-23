@@ -6,8 +6,8 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
-import org.bukkit.craftbukkit.v1_21_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_21_R4.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

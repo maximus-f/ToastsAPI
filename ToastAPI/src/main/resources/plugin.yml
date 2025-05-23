@@ -1,0 +1,24 @@
+name: ToastAPI
+version: '${project.version}'
+main: com.frengor.toastapi.ToastPlugin
+api-version: '1.15'
+description: A lightweight Toast notification API for Minecraft servers
+author: fren_gor
+website: https://github.com/frengor/ToastAPI
+
+commands:
+  toast:
+    description: Send a test toast notification
+    usage: /toast <task|goal|challenge> [message]
+    permission: toastapi.toast
+    permission-message: §cYou don't have permission to use this command!
+
+permissions:
+  toastapi.toast:
+    description: Allows use of the /toast command
+    default: op
+  toastapi.*:
+    description: Gives access to all ToastAPI permissions
+    default: op
+    children:
+      toastapi.toast: true 

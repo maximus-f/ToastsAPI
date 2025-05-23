@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <mc-version>1.21.5-R0.1-SNAPSHOT</mc-version>
+        <mc-version>1.21.4-R0.1-SNAPSHOT</mc-version>
     </properties>
 
     <dependencies>
@@ -51,6 +51,27 @@
             </resource>
         </resources>
         <plugins>
+            <!-- Override toolchain to use Java 22 for 1.21.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>22</version>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+            </plugin>
+            <!-- Compiler plugin for Java 21+ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

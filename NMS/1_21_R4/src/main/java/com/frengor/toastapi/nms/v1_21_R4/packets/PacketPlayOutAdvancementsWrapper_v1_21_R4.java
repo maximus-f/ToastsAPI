@@ -7,6 +7,7 @@ import com.frengor.toastapi.nms.wrappers.advancement.AdvancementWrapper;
 import com.frengor.toastapi.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.collect.Maps;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -34,11 +35,11 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R4 extends PacketPlayOutAdva
             AdvancementWrapper adv = e.getKey();
             // For toast notifications, we just need a simple progress
             AdvancementProgress progress = new AdvancementProgress();
-            progress.update(((Advancement) adv.toNMS()).getCriteria(), ((Advancement) adv.toNMS()).getRequirements());
+            // In 1.21.4, we need to manually complete the criterion for toast display
             progress.getCriterion("0").grant();
             map.put((ResourceLocation) adv.getKey().toNMS(), progress);
         }
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<Advancement>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
+        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<AdvancementHolder>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
     }
 
     @SuppressWarnings("unchecked")

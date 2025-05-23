@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.critereon.ImpossibleTrigger;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class AdvancementWrapper_v1_21_R4 extends AdvancementWrapper {
 
@@ -24,24 +26,42 @@ public class AdvancementWrapper_v1_21_R4 extends AdvancementWrapper {
     private final AdvancementDisplayWrapper display;
 
     public AdvancementWrapper_v1_21_R4(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
-        Map<String, Criterion> advCriteria = createSimpleCriteria();
-        this.advancement = new Advancement((ResourceLocation) key.toNMS(), null, (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}}, false);
+        Map<String, Criterion<?>> advCriteria = createSimpleCriteria();
+        this.advancement = new Advancement(
+            Optional.of((ResourceLocation) key.toNMS()), 
+            AdvancementRewards.EMPTY, 
+            Optional.<Advancement>empty(), 
+            Optional.of((DisplayInfo) display.toNMS()), 
+            advCriteria, 
+            new String[][]{{"0"}}, 
+            false
+        );
         this.key = key;
         this.parent = null;
         this.display = display;
     }
 
     public AdvancementWrapper_v1_21_R4(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementWrapper parent, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
-        Map<String, Criterion> advCriteria = createSimpleCriteria();
-        this.advancement = new Advancement((ResourceLocation) key.toNMS(), (Advancement) parent.toNMS(), (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}}, false);
+        Map<String, Criterion<?>> advCriteria = createSimpleCriteria();
+        this.advancement = new Advancement(
+            Optional.of((ResourceLocation) key.toNMS()), 
+            AdvancementRewards.EMPTY, 
+            Optional.of((Advancement) parent.toNMS()), 
+            Optional.of((DisplayInfo) display.toNMS()), 
+            advCriteria, 
+            new String[][]{{"0"}}, 
+            false
+        );
         this.key = key;
         this.parent = parent;
         this.display = display;
     }
 
-    private static Map<String, Criterion> createSimpleCriteria() {
-        Map<String, Criterion> advCriteria = Maps.newHashMapWithExpectedSize(1);
-        advCriteria.put("0", new Criterion(new ImpossibleTrigger.TriggerInstance()));
+    private static Map<String, Criterion<?>> createSimpleCriteria() {
+        Map<String, Criterion<?>> advCriteria = Maps.newHashMapWithExpectedSize(1);
+        ImpossibleTrigger trigger = new ImpossibleTrigger();
+        ImpossibleTrigger.TriggerInstance triggerInstance = new ImpossibleTrigger.TriggerInstance();
+        advCriteria.put("0", new Criterion<>(trigger, triggerInstance));
         return advCriteria;
     }
 

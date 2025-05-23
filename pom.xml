@@ -110,6 +110,36 @@
 
         <pluginManagement>
             <plugins>
+                <!-- Maven Toolchains Plugin for multi-Java builds -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>toolchain</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <toolchains>
+                            <jdk>
+                                <version>17</version>
+                            </jdk>
+                        </toolchains>
+                    </configuration>
+                </plugin>
+                <!-- Compiler plugin with toolchain support -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>17</source>
+                        <target>17</target>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
@@ -279,6 +309,11 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+            <!-- Enable toolchains -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

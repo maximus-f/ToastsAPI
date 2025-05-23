@@ -6,9 +6,8 @@ import com.frengor.toastapi.nms.wrappers.advancement.AdvancementFrameTypeWrapper
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.core.ClientAsset;
-import org.bukkit.craftbukkit.v1_21_R4.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R4.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,15 +20,15 @@ public class AdvancementDisplayWrapper_v1_21_R4 extends AdvancementDisplayWrappe
     private final AdvancementFrameTypeWrapper frameType;
 
     public AdvancementDisplayWrapper_v1_21_R4(@NotNull ItemStack icon, @NotNull String title, @NotNull String description, @NotNull AdvancementFrameTypeWrapper frameType, float x, float y, boolean showToast, boolean announceChat, boolean hidden, @Nullable String backgroundTexture) {
-        ClientAsset clientAsset = Util.parseBackgroundTexture(backgroundTexture);
-        this.display = new DisplayInfo(CraftItemStack.asNMSCopy(icon), Util.fromString(title), Util.fromString(description), Optional.ofNullable(clientAsset), (AdvancementType) frameType.toNMS(), showToast, announceChat, hidden);
+        // For toast notifications, we don't need background textures
+        this.display = new DisplayInfo(CraftItemStack.asNMSCopy(icon), Util.fromString(title), Util.fromString(description), Optional.empty(), (AdvancementType) frameType.toNMS(), showToast, announceChat, hidden);
         this.display.setLocation(x, y);
         this.frameType = frameType;
     }
 
     public AdvancementDisplayWrapper_v1_21_R4(@NotNull ItemStack icon, @NotNull BaseComponent title, @NotNull BaseComponent description, @NotNull AdvancementFrameTypeWrapper frameType, float x, float y, boolean showToast, boolean announceChat, boolean hidden, @Nullable String backgroundTexture) {
-        ClientAsset clientAsset = Util.parseBackgroundTexture(backgroundTexture);
-        this.display = new DisplayInfo(CraftItemStack.asNMSCopy(icon), Util.fromComponent(title), Util.fromComponent(description), Optional.ofNullable(clientAsset), (AdvancementType) frameType.toNMS(), showToast, announceChat, hidden);
+        // For toast notifications, we don't need background textures
+        this.display = new DisplayInfo(CraftItemStack.asNMSCopy(icon), Util.fromComponent(title), Util.fromComponent(description), Optional.empty(), (AdvancementType) frameType.toNMS(), showToast, announceChat, hidden);
         this.display.setLocation(x, y);
         this.frameType = frameType;
     }
@@ -86,8 +85,8 @@ public class AdvancementDisplayWrapper_v1_21_R4 extends AdvancementDisplayWrappe
     @Override
     @Nullable
     public String getBackgroundTexture() {
-        Optional<ClientAsset> r = display.getBackground();
-        return r.isEmpty() ? null : r.toString();
+        // Background textures not supported for toast notifications
+        return null;
     }
 
     @Override

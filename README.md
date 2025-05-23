@@ -77,3 +77,92 @@ The API uses the following libraries:
   * [CommandAPI](https://github.com/JorelAli/CommandAPI) (released under MIT license) to add commands to the plugin version of the API
   * [HikariCP](https://github.com/brettwooldridge/HikariCP) (released under Apache-2.0 license) to connect to MySQL databases
   * [bStats](https://bstats.org/) (the Java library is released under MIT license) to collect usage data (which can be found [here](https://bstats.org/plugin/bukkit/UltimateAdvancementAPI/12593)) about the plugin version of the API
+
+# ToastAPI
+
+A lightweight toast notification API for Minecraft servers (1.20.x supported).
+
+## What It Does
+
+ToastAPI allows you to send custom toast notifications (those advancement popup messages) to players without them staying in the advancement menu. Perfect for temporary notifications, welcome messages, and alerts.
+
+## Usage
+
+### As a Standalone Plugin
+
+1. **Download** the `ToastAPI-1.0.0.jar` from `ToastAPI/target/`
+2. **Install** it in your server's `plugins/` folder
+3. **Restart** your server
+
+#### Commands
+
+- `/toast <type> [message]` - Send a test toast notification
+  - Types: `task`, `goal`, `challenge`
+  - Example: `/toast goal Welcome to our server!`
+  - Permission: `toastapi.toast` (default: op)
+
+#### Features
+
+- **Welcome Toast**: Players automatically receive a welcome toast when they join
+- **Test Command**: Use `/toast` to test different toast types
+- **Different Frame Types**:
+  - `task` - Regular square frame (grass block icon)
+  - `goal` - Fancy frame with rounded corners (diamond icon)  
+  - `challenge` - Ornate frame with decorative elements (dragon head icon)
+
+### As a Library (For Developers)
+
+Add ToastAPI as a dependency to your plugin:
+
+```xml
+<dependency>
+    <groupId>com.frengor</groupId>
+    <artifactId>toastapi</artifactId>
+    <version>1.0.0</version>
+    <scope>compile</scope>
+</dependency>
+```
+
+Then shade it into your plugin and use the API:
+
+```java
+import com.frengor.toastapi.ToastAPI;
+import com.frengor.toastapi.AdvancementFrameType;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+// Send a toast notification
+ToastAPI.displayCustomToast(
+    player, 
+    new ItemStack(Material.DIAMOND), 
+    "§6Achievement Unlocked!", 
+    AdvancementFrameType.GOAL
+);
+```
+
+## Supported Versions
+
+- **Currently**: Minecraft 1.20.x (Paper/Spigot)
+- **Planned**: Full support for 1.15-1.21
+
+## How It Works
+
+1. Creates temporary advancement entries
+2. Sends advancement packets to trigger the toast display
+3. Immediately removes the advancements so they don't clutter the advancement menu
+4. Uses NMS (Net Minecraft Server) for cross-version compatibility
+
+## Development
+
+This project uses Maven and includes NMS wrappers for different Minecraft versions.
+
+```bash
+# Build the plugin
+mvn clean package
+
+# The plugin JAR will be in ToastAPI/target/ToastAPI-1.0.0.jar
+```
+
+## License
+
+GNU Lesser General Public License v3.0 or later
