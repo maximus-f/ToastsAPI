@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.frengor</groupId>
-        <artifactId>ultimateadvancementapi-nms-parent</artifactId>
-        <version>2.5.1</version>
+        <artifactId>toastapi-nms-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
-    <artifactId>ultimateadvancementapi-nms-distribution-mojang-mapped</artifactId>
-    <name>UltimateAdvancementAPI-NMS-Distribution-Mojang-Mapped</name>
+    <artifactId>toastapi-nms-distribution-mojang-mapped</artifactId>
+    <name>ToastAPI-NMS-Distribution-Mojang-Mapped</name>
     <url>${parent.url}</url>
     <packaging>jar</packaging>
 
@@ -19,121 +19,7 @@
         <!-- NMS Modules -->
         <dependency>
             <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_15_R1</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_16_R1</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_16_R2</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_16_R3</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_17_R1</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_18_R1</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_18_R2</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_19_R1</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_19_R2</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_19_R3</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_20_R1</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_20_R2</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_20_R3</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_20_R4</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_21_R1</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_21_R2</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_21_R3</artifactId>
-            <version>${project.version}</version>
-            <classifier>mojang-mapped</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-1_21_R4</artifactId>
+            <artifactId>toastapi-nms-1_20_R1</artifactId>
             <version>${project.version}</version>
             <classifier>mojang-mapped</classifier>
         </dependency>
@@ -148,23 +34,7 @@
                     <relocations>
                         <!-- CraftBukkit relocations for mojang-mapped servers -->
                         <relocation>
-                            <pattern>org.bukkit.craftbukkit.v1_20_R4</pattern>
-                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bukkit.craftbukkit.v1_21_R1</pattern>
-                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bukkit.craftbukkit.v1_21_R2</pattern>
-                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bukkit.craftbukkit.v1_21_R3</pattern>
-                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.bukkit.craftbukkit.v1_21_R4</pattern>
+                            <pattern>org.bukkit.craftbukkit.v1_20_R1</pattern>
                             <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
                         </relocation>
                     </relocations>

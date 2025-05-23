@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.frengor</groupId>
-        <artifactId>ultimateadvancementapi-nms-parent</artifactId>
-        <version>2.5.1</version>
+        <artifactId>toastapi-nms-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
-    <artifactId>ultimateadvancementapi-nms-1_19_R1</artifactId>
-    <name>UltimateAdvancementAPI-NMS-1_19_R1</name>
+    <artifactId>toastapi-nms-1_19_R1</artifactId>
+    <name>ToastAPI-NMS-1_19_R1</name>
     <url>${parent.url}</url>
     <packaging>jar</packaging>
 
@@ -23,7 +23,7 @@
         <!-- NMS Common Module -->
         <dependency>
             <groupId>com.frengor</groupId>
-            <artifactId>ultimateadvancementapi-nms-common</artifactId>
+            <artifactId>toastapi-nms-common</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
