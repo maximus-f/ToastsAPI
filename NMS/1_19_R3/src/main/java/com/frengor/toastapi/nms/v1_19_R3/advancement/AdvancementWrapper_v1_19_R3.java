@@ -25,7 +25,7 @@ public class AdvancementWrapper_v1_19_R3 extends AdvancementWrapper {
 
     public AdvancementWrapper_v1_19_R3(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
         Map<String, Criterion> advCriteria = createSimpleCriteria();
-        this.advancement = new Advancement((ResourceLocation) key.toNMS(), null, (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}}, false);
+        this.advancement = new Advancement((ResourceLocation) key.toNMS(), null, (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}});
         this.key = key;
         this.parent = null;
         this.display = display;
@@ -33,7 +33,7 @@ public class AdvancementWrapper_v1_19_R3 extends AdvancementWrapper {
 
     public AdvancementWrapper_v1_19_R3(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementWrapper parent, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
         Map<String, Criterion> advCriteria = createSimpleCriteria();
-        this.advancement = new Advancement((ResourceLocation) key.toNMS(), (Advancement) parent.toNMS(), (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}}, false);
+        this.advancement = new Advancement((ResourceLocation) key.toNMS(), (Advancement) parent.toNMS(), (DisplayInfo) display.toNMS(), AdvancementRewards.EMPTY, advCriteria, new String[][]{{"0"}});
         this.key = key;
         this.parent = parent;
         this.display = display;

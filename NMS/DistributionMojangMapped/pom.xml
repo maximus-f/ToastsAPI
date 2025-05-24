@@ -19,6 +19,12 @@
         <!-- NMS Modules -->
         <dependency>
             <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-1_19_R3</artifactId>
+            <version>${project.version}</version>
+            <classifier>mojang-mapped</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
             <artifactId>toastapi-nms-1_20_R1</artifactId>
             <version>${project.version}</version>
             <classifier>mojang-mapped</classifier>
