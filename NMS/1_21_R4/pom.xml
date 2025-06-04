@@ -51,25 +51,25 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Override toolchain to use Java 22 for 1.21.4 -->
+            <!-- Use default Java 17 toolchain from parent -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-toolchains-plugin</artifactId>
                 <configuration>
                     <toolchains>
                         <jdk>
-                            <version>22</version>
+                            <version>17</version>
                         </jdk>
                     </toolchains>
                 </configuration>
             </plugin>
-            <!-- Compiler plugin for Java 21+ -->
+            <!-- Compiler plugin for Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>

@@ -6,8 +6,9 @@ import com.frengor.toastapi.nms.wrappers.MinecraftKeyWrapper;
 import com.frengor.toastapi.nms.wrappers.advancement.AdvancementWrapper;
 import com.frengor.toastapi.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.collect.Maps;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
 import org.bukkit.entity.Player;
@@ -29,16 +30,14 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R2 extends PacketPlayOutAdva
 
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_21_R2(@NotNull Map<AdvancementWrapper, Integer> toSend) {
-        Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
+        Map<ResourceLocation, AdvancementProgress> progressMap = Maps.newHashMapWithExpectedSize(toSend.size());
         for (Entry<AdvancementWrapper, Integer> e : toSend.entrySet()) {
             AdvancementWrapper adv = e.getKey();
-            // For toast notifications, we just need a simple progress
-            AdvancementProgress progress = new AdvancementProgress();
-            progress.update(((Advancement) adv.toNMS()).getCriteria(), ((Advancement) adv.toNMS()).getRequirements());
-            progress.getCriterion("0").grant();
-            map.put((ResourceLocation) adv.getKey().toNMS(), progress);
+            AdvancementHolder holder = (AdvancementHolder) adv.toNMS();
+            AdvancementProgress progress = createAdvancementProgress(holder, e.getValue());
+            progressMap.put((ResourceLocation) adv.getKey().toNMS(), progress);
         }
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<Advancement>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
+        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<AdvancementHolder>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), progressMap);
     }
 
     @SuppressWarnings("unchecked")
@@ -49,5 +48,20 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R2 extends PacketPlayOutAdva
     @Override
     public void sendTo(@NotNull Player player) {
         Util.sendTo(player, packet);
+    }
+
+    @NotNull
+    private static AdvancementProgress createAdvancementProgress(@NotNull AdvancementHolder holder, int progression) {
+        AdvancementProgress progress = new AdvancementProgress();
+        progress.update(holder.value().requirements());
+
+        for (int i = 0; i < progression; i++) {
+            CriterionProgress criterionProgress = progress.getCriterion(String.valueOf(i));
+            if (criterionProgress != null) {
+                criterionProgress.grant();
+            }
+        }
+
+        return progress;
     }
 }
