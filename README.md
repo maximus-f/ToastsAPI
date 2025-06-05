@@ -1,10 +1,10 @@
 # ToastAPI
 
-A lightweight Minecraft plugin for displaying toast notifications across versions 1.20-1.21.5.
+A lightweight Minecraft plugin for displaying toast notifications across versions 1.20.2, 1.20.4, 1.21, 1.21.4, 1.21.5
 
 ## Features
 - Simple toast notifications
-- Multi-version support (1.20.x, 1.21.5)
+- Multi-version support (1.21, 1.20.1)
 - Commands: `/toast <type> [message]`
 - Join event notifications
 - Permission system
