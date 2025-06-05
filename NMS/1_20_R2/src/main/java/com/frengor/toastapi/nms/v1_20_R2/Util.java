@@ -10,6 +10,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.advancements.critereon.ImpossibleTrigger;
+import net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -29,7 +30,7 @@ public class Util {
 
         Map<String, Criterion<?>> advCriteria = Maps.newHashMapWithExpectedSize(maxProgression);
         for (int i = 0; i < maxProgression; i++) {
-            advCriteria.put(String.valueOf(i), new Criterion<>(new ImpossibleTrigger(), new ImpossibleTrigger.TriggerInstance()));
+            advCriteria.put(String.valueOf(i), new Criterion<>(new ImpossibleTrigger(), new TriggerInstance()));
         }
 
         return advCriteria;

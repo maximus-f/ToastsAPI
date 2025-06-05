@@ -27,8 +27,7 @@ public class AdvancementWrapper_v1_20_R2 extends AdvancementWrapper {
 
     public AdvancementWrapper_v1_20_R2(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
         Map<String, Criterion<?>> advCriteria = Util.getAdvancementCriteria(maxProgression);
-        AdvancementRequirements advRequirements = Util.getAdvancementRequirements(advCriteria);
-        Advancement advancement = new Advancement(Optional.empty(), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, advRequirements, false, Optional.empty());
+        Advancement advancement = new Advancement(Optional.empty(), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, Util.getAdvancementRequirements(advCriteria), false, Optional.empty());
         this.advancementHolder = new AdvancementHolder((ResourceLocation) key.toNMS(), advancement);
         this.key = key;
         this.parent = null;
@@ -37,7 +36,22 @@ public class AdvancementWrapper_v1_20_R2 extends AdvancementWrapper {
 
     public AdvancementWrapper_v1_20_R2(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementWrapper parent, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
         Map<String, Criterion<?>> advCriteria = Util.getAdvancementCriteria(maxProgression);
-        AdvancementRequirements advRequirements = Util.getAdvancementRequirements(advCriteria);
+        Advancement advancement = new Advancement(Optional.of((ResourceLocation) parent.getKey().toNMS()), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, Util.getAdvancementRequirements(advCriteria), false, Optional.empty());
+        this.advancementHolder = new AdvancementHolder((ResourceLocation) key.toNMS(), advancement);
+        this.key = key;
+        this.parent = parent;
+        this.display = display;
+    }
+
+    protected AdvancementWrapper_v1_20_R2(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementDisplayWrapper display, @NotNull Map<String, Criterion<?>> advCriteria, @NotNull AdvancementRequirements advRequirements) {
+        Advancement advancement = new Advancement(Optional.empty(), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, advRequirements, false, Optional.empty());
+        this.advancementHolder = new AdvancementHolder((ResourceLocation) key.toNMS(), advancement);
+        this.key = key;
+        this.parent = null;
+        this.display = display;
+    }
+
+    protected AdvancementWrapper_v1_20_R2(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementWrapper parent, @NotNull AdvancementDisplayWrapper display, @NotNull Map<String, Criterion<?>> advCriteria, @NotNull AdvancementRequirements advRequirements) {
         Advancement advancement = new Advancement(Optional.of((ResourceLocation) parent.getKey().toNMS()), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, advRequirements, false, Optional.empty());
         this.advancementHolder = new AdvancementHolder((ResourceLocation) key.toNMS(), advancement);
         this.key = key;

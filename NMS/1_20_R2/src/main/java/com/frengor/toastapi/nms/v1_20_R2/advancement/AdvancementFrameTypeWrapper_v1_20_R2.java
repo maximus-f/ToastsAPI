@@ -1,6 +1,5 @@
 package com.frengor.toastapi.nms.v1_20_R2.advancement;
 
-import com.frengor.toastapi.AdvancementFrameType.FrameType;
 import com.frengor.toastapi.nms.wrappers.advancement.AdvancementFrameTypeWrapper;
 import org.jetbrains.annotations.NotNull;
 
