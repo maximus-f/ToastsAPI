@@ -34,6 +34,11 @@ public class ToastPlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission("toastapi.usecmd")) {
+            sender.sendMessage("§cYou don't have permission to use this command!");
+            return true;
+        }
+
         if (!command.getName().equalsIgnoreCase("toast")) {
             return false;
         }
@@ -82,22 +87,5 @@ public class ToastPlugin extends JavaPlugin implements Listener {
         return true;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        
-        // Send a welcome toast after a short delay to ensure the player is fully loaded
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            try {
-                ToastAPI.displayCustomToast(
-                    player, 
-                    new ItemStack(Material.EMERALD), 
-                    "§6Welcome to the server!", 
-                    AdvancementFrameType.GOAL
-                );
-            } catch (Exception e) {
-                getLogger().warning("Failed to send welcome toast to " + player.getName() + ": " + e.getMessage());
-            }
-        }, 40L); // 2 second delay
-    }
+    
 } 

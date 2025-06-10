@@ -43,27 +43,16 @@ This installs ToastAPI to your local Maven repository with:
 - **ArtifactId**: `toastapi` 
 - **Version**: `1.0.0`
 
+> **📦 Note**: ToastAPI uses a traditional distribution approach - we keep things simple and reliable by having you build from source and install locally. No complex remote repositories or dependency resolution headaches, just straightforward Maven installation that works every time.
+
 ### 2. Add as Dependency
 
 Add ToastAPI to your plugin's `pom.xml`:
 
 ```xml
-<repositories>
-    <repository>
-        <id>spigot-repo</id>
-        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-</repositories>
 
 <dependencies>
-    <!-- Spigot API (provided by server) -->
-    <dependency>
-        <groupId>org.spigotmc</groupId>
-        <artifactId>spigot-api</artifactId>
-        <version>1.21.5-R0.1-SNAPSHOT</version>
-        <scope>provided</scope>
-    </dependency>
-    
+    ... 
     <!-- ToastAPI (installed locally) -->
     <dependency>
         <groupId>com.frengor</groupId>
@@ -115,17 +104,6 @@ Use Maven Shade Plugin to include ToastAPI in your plugin:
 </build>
 ```
 
-### 4. Plugin.yml Configuration
-
-**No dependency needed** - ToastAPI is shaded into your plugin:
-```yaml
-name: YourPlugin
-version: 1.0.0
-main: your.package.YourPlugin
-api-version: 1.21
-# No depend/soft-depend needed since ToastAPI is shaded
-```
-
 ### Basic Usage Example
 ```java
 import com.frengor.toastapi.ToastAPI;
@@ -141,28 +119,8 @@ ToastAPI.getInstance().sendToast(
 );
 ```
 
-### Alternative: JitPack (if available)
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
 
-<dependencies>
-    <dependency>
-        <groupId>com.github.maximus-f</groupId>
-        <artifactId>ToastsAPI</artifactId>
-        <version>v1.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
-*Note: With JitPack, add `depend: [ToastAPI]` to your plugin.yml*
 
-📖 **Full Integration Guide:** See [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md) for complete documentation and examples.  
-📋 **Example Template:** See [example-pom.xml](example-pom.xml) for a complete working pom.xml template.
 
 ## Attribution
 This project contains code derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, licensed under **GPL v3**. The NMS wrapper system and advancement handling code are based on this original work.
