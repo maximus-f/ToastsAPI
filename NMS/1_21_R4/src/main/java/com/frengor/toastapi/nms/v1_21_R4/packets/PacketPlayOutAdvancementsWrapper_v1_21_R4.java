@@ -8,11 +8,9 @@ import com.frengor.toastapi.nms.wrappers.packets.PacketPlayOutAdvancementsWrappe
 import com.google.common.collect.Maps;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.ResourceLocation;
 import org.bukkit.entity.Player;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -26,43 +24,26 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R4 extends PacketPlayOutAdva
     private final ClientboundUpdateAdvancementsPacket packet;
 
     public PacketPlayOutAdvancementsWrapper_v1_21_R4() {
-        this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
+        this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap(), true);
     }
 
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_21_R4(@NotNull Map<AdvancementWrapper, Integer> toSend) {
-        Map<ResourceLocation, AdvancementProgress> progressMap = Maps.newHashMapWithExpectedSize(toSend.size());
+        Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
         for (Entry<AdvancementWrapper, Integer> e : toSend.entrySet()) {
             AdvancementWrapper adv = e.getKey();
-            AdvancementHolder holder = (AdvancementHolder) adv.toNMS();
-            AdvancementProgress progress = createAdvancementProgress(holder, e.getValue());
-            progressMap.put((ResourceLocation) adv.getKey().toNMS(), progress);
+            map.put((ResourceLocation) adv.getKey().toNMS(), Util.getAdvancementProgress((AdvancementHolder) adv.toNMS(), e.getValue()));
         }
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<AdvancementHolder>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), progressMap);
+        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<AdvancementHolder>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map, true);
     }
 
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_21_R4(@NotNull Set<MinecraftKeyWrapper> toRemove) {
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, Collections.emptyList(), (Set<ResourceLocation>) ListSet.fromWrapperSet(toRemove), Collections.emptyMap());
+        this.packet = new ClientboundUpdateAdvancementsPacket(false, Collections.emptyList(), (Set<ResourceLocation>) ListSet.fromWrapperSet(toRemove), Collections.emptyMap(), true);
     }
 
     @Override
     public void sendTo(@NotNull Player player) {
-        ((CraftPlayer) player).getHandle().connection.send(packet);
-    }
-
-    @NotNull
-    private static AdvancementProgress createAdvancementProgress(@NotNull AdvancementHolder holder, int progression) {
-        AdvancementProgress progress = new AdvancementProgress();
-        progress.update(holder.value().requirements());
-
-        for (int i = 0; i < progression; i++) {
-            CriterionProgress criterionProgress = progress.getCriterion(String.valueOf(i));
-            if (criterionProgress != null) {
-                criterionProgress.grant();
-            }
-        }
-
-        return progress;
+        Util.sendTo(player, packet);
     }
 }
