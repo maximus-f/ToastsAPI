@@ -2,6 +2,8 @@
 
 A complete guide for developers who want to integrate ToastAPI into their Minecraft plugins.
 
+> **💡 Quick Start**: Build ToastAPI locally (`mvn clean install`), then shade it into your plugin. No separate server-side installation needed!
+
 ## 📋 Table of Contents
 - [Setup](#setup)
 - [Basic Usage](#basic-usage)
@@ -11,11 +13,106 @@ A complete guide for developers who want to integrate ToastAPI into their Minecr
 
 ## 🛠️ Setup
 
-### 1. **Add ToastAPI Dependency**
+### 1. **Build and Install ToastAPI Locally (RECOMMENDED)**
 
-#### Option A: Local Installation (Recommended for Testing)
+First, clone and build ToastAPI from source:
 ```bash
-# Download ToastAPI-1.0.0.jar, then install to local Maven repo:
+git clone https://github.com/maximus-f/ToastsAPI.git
+cd ToastsAPI
+mvn clean install
+```
+
+This installs ToastAPI to your local Maven repository with:
+- **GroupId**: `com.frengor`
+- **ArtifactId**: `toastapi` 
+- **Version**: `1.0.0`
+
+> 📋 **Quick Template**: See [example-pom.xml](example-pom.xml) for a complete working pom.xml you can copy and modify.
+
+### 2. **Add ToastAPI Dependency (pom.xml)**
+```xml
+<repositories>
+    <repository>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <!-- Spigot API (provided by server) -->
+    <dependency>
+        <groupId>org.spigotmc</groupId>
+        <artifactId>spigot-api</artifactId>
+        <version>1.21.5-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- ToastAPI (installed locally) -->
+    <dependency>
+        <groupId>com.frengor</groupId>
+        <artifactId>toastapi</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
+
+### 3. **Shade ToastAPI into Your Plugin**
+
+Use Maven Shade Plugin to include ToastAPI directly in your plugin JAR:
+
+```xml
+<build>
+    <plugins>
+        <!-- Shade ToastAPI into your plugin jar -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.5.1</version>
+            <configuration>
+                <createDependencyReducedPom>false</createDependencyReducedPom>
+                <minimizeJar>false</minimizeJar>
+                
+                <relocations>
+                    <relocation>
+                        <pattern>com.frengor.toastapi</pattern>
+                        <shadedPattern>your.package.libs.com.frengor.toastapi</shadedPattern>
+                    </relocation>
+                </relocations>
+                
+                <!-- Only shade ToastAPI, not Spigot -->
+                <artifactSet>
+                    <includes>
+                        <include>com.frengor:toastapi</include>
+                    </includes>
+                </artifactSet>
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### 4. **Plugin Configuration (plugin.yml)**
+
+**No dependency needed** since ToastAPI is shaded into your plugin:
+```yaml
+name: YourPlugin
+version: 1.0.0
+main: your.package.YourPlugin
+api-version: 1.21
+# No depend/soft-depend needed - ToastAPI is included in your JAR
+```
+
+### Alternative: Manual Installation
+If you have the ToastAPI JAR file, install it manually:
+```bash
 mvn install:install-file \
   -Dfile=ToastAPI-1.0.0.jar \
   -DgroupId=com.frengor \
@@ -24,7 +121,7 @@ mvn install:install-file \
   -Dpackaging=jar
 ```
 
-#### Option B: Use JitPack (RECOMMENDED)
+### Alternative: JitPack (if available)
 ```xml
 <repositories>
     <repository>
@@ -40,37 +137,7 @@ mvn install:install-file \
     <scope>provided</scope>
 </dependency>
 ```
-
-### 2. **Maven Dependencies (pom.xml)**
-```xml
-<dependencies>
-    <!-- ToastAPI -->
-    <dependency>
-        <groupId>com.frengor</groupId>
-        <artifactId>toastapi</artifactId>
-        <version>1.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-    
-    <!-- Spigot/Paper API -->
-    <dependency>
-        <groupId>org.spigotmc</groupId>
-        <artifactId>spigot-api</artifactId>
-        <version>1.21.3-R0.1-SNAPSHOT</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
-
-### 3. **Plugin Dependencies (plugin.yml)**
-```yaml
-name: YourPlugin
-version: 1.0.0
-main: com.yourname.yourplugin.Main
-api-version: 1.21
-depend: [ToastAPI]
-# or soft-depend: [ToastAPI] if optional
-```
+*Note: With JitPack, add `depend: [ToastAPI]` to your plugin.yml*
 
 ## 📚 Basic Usage
 
@@ -85,12 +152,8 @@ public class YourPlugin extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        // Check if ToastAPI is available
-        if (!getServer().getPluginManager().isPluginEnabled("ToastAPI")) {
-            getLogger().warning("ToastAPI not found! Disabling plugin...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        // ToastAPI is shaded into your plugin - no dependency check needed!
+        getLogger().info("Plugin enabled with ToastAPI support");
     }
     
     public void sendToast(Player player, String message) {
@@ -192,42 +255,35 @@ public void scheduleToast(Player player, String message, long delayTicks) {
 
 ## 📦 Distribution Options
 
-### **Option 1: Local Installation**
-Users must install ToastAPI to their local Maven repository:
-```bash
-mvn install:install-file \
-  -Dfile=ToastAPI-1.0.0.jar \
-  -DgroupId=com.frengor \
-  -DartifactId=toastapi \
-  -Dversion=1.0.0 \
-  -Dpackaging=jar
-```
+### **Option 1: Shaded Plugin (RECOMMENDED)**
+Include ToastAPI directly in your plugin JAR (as shown in setup above):
+- ✅ **No server-side dependency management**
+- ✅ **Users just drop your plugin in plugins folder**
+- ✅ **No version conflicts**
+- ✅ **Easiest for end users**
 
-### **Option 2: JitPack (GitHub)**
-If you host ToastAPI on GitHub, others can use JitPack:
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-
-### **Option 3: Shade into Plugin**
-Include ToastAPI directly in your plugin JAR:
+Example from a working project:
 ```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
-    <version>3.2.4</version>
+    <version>3.5.1</version>
     <configuration>
+        <createDependencyReducedPom>false</createDependencyReducedPom>
+        <minimizeJar>false</minimizeJar>
+        
         <relocations>
             <relocation>
                 <pattern>com.frengor.toastapi</pattern>
-                <shadedPattern>com.yourname.yourplugin.libs.toastapi</shadedPattern>
+                <shadedPattern>your.package.libs.com.frengor.toastapi</shadedPattern>
             </relocation>
         </relocations>
+        
+        <artifactSet>
+            <includes>
+                <include>com.frengor:toastapi</include>
+            </includes>
+        </artifactSet>
     </configuration>
     <executions>
         <execution>
@@ -240,8 +296,27 @@ Include ToastAPI directly in your plugin JAR:
 </plugin>
 ```
 
+### **Option 2: Separate Plugin Dependency**
+Users install ToastAPI as a separate plugin:
+- ⚠️ **Users must install ToastAPI.jar separately**
+- ⚠️ **Version compatibility issues possible**
+- ✅ **Smaller plugin file size**
+
+Use `depend: [ToastAPI]` in your plugin.yml
+
+### **Option 3: JitPack (if available)**
+If ToastAPI is hosted on GitHub with JitPack support:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
 ### **Option 4: Maven Repository**
-Host on a public Maven repository like Maven Central or your own Nexus.
+Host on Maven Central or your own Nexus repository for enterprise use.
 
 ## ⚖️ Legal Considerations
 
@@ -327,16 +402,18 @@ toasts:
 ## 🔗 Useful Links
 
 - **ToastAPI GitHub**: https://github.com/maximus-f/ToastsAPI
-- **Original UAA**: https://github.com/frengor/UltimateAdvancementAPI
+- **Original UAA**: https://github.com/frengor/UltimateAdvancementAPI  
+- **Maven Shade Plugin**: https://maven.apache.org/plugins/maven-shade-plugin/
 - **GPL-3.0 License**: https://www.gnu.org/licenses/gpl-3.0.html
 - **Spigot API**: https://hub.spigotmc.org/javadocs/spigot/
 - **Paper API**: https://papermc.io/javadocs/paper/
 
 ## 💡 Need Help?
 
-- Open an issue on GitHub
-- Check the original UAA documentation
-- Join the community Discord (if available)
+- **Build Issues**: Make sure you have Java 21+ and Maven 3.6+
+- **Runtime Issues**: Check server console for ToastAPI errors
+- **Questions**: Open an issue on GitHub
+- **UAA Documentation**: Check the original UAA project for advanced features
 
 ---
 
