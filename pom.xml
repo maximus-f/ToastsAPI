@@ -310,11 +310,28 @@
                     </filesets>
                 </configuration>
             </plugin>
-            <!-- Enable toolchains -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-toolchains-plugin</artifactId>
-            </plugin>
         </plugins>
+        
+        <!-- Profile for local development with toolchains -->
+        <profiles>
+            <profile>
+                <id>toolchains</id>
+                <activation>
+                    <!-- Only activate if toolchains.xml exists -->
+                    <file>
+                        <exists>${user.home}/.m2/toolchains.xml</exists>
+                    </file>
+                </activation>
+                <build>
+                    <plugins>
+                        <!-- Enable toolchains only for local builds -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-toolchains-plugin</artifactId>
+                        </plugin>
+                    </plugins>
+                </build>
+            </profile>
+        </profiles>
     </build>
 </project>
