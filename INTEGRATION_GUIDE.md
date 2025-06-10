@@ -24,7 +24,7 @@ mvn install:install-file \
   -Dpackaging=jar
 ```
 
-#### Option B: Use JitPack (If hosted on GitHub)
+#### Option B: Use JitPack (RECOMMENDED)
 ```xml
 <repositories>
     <repository>
@@ -34,9 +34,9 @@ mvn install:install-file \
 </repositories>
 
 <dependency>
-    <groupId>com.github.YourGitHubUsername</groupId>
-    <artifactId>ToastAPI</artifactId>
-    <version>1.0.0</version>
+    <groupId>com.github.maximus-f</groupId>
+    <artifactId>ToastsAPI</artifactId>
+    <version>v1.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -326,7 +326,7 @@ toasts:
 
 ## 🔗 Useful Links
 
-- **ToastAPI GitHub**: (Your GitHub repo)
+- **ToastAPI GitHub**: https://github.com/maximus-f/ToastsAPI
 - **Original UAA**: https://github.com/frengor/UltimateAdvancementAPI
 - **GPL-3.0 License**: https://www.gnu.org/licenses/gpl-3.0.html
 - **Spigot API**: https://hub.spigotmc.org/javadocs/spigot/
