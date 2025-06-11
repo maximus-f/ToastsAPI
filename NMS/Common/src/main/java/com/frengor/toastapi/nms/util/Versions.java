@@ -72,9 +72,9 @@ public class Versions {
             case 21 -> {
                 if (MINOR_VERSION >= 5) {
                     yield Optional.of("v1_21_R4");
-                } else if (MINOR_VERSION >= 3) {
+                } else if (MINOR_VERSION >= 4) {
                     yield Optional.of("v1_21_R3");
-                } else if (MINOR_VERSION == 2) {
+                } else if (MINOR_VERSION >= 2) {
                     yield Optional.of("v1_21_R2");
                 } else {
                     yield Optional.of("v1_21_R1");
