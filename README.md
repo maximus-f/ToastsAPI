@@ -61,7 +61,7 @@ Add ToastAPI to your plugin's `pom.xml`:
     <dependency>
         <groupId>com.frengor</groupId>
         <artifactId>toastapi</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </dependency>
 </dependencies>
 ```
@@ -127,14 +127,14 @@ ToastAPI.getInstance().sendToast(
 
 
 ## Attribution
-This project contains code derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, licensed under **GPL v3**. The NMS wrapper system and advancement handling code are based on this original work.
+This project contains code derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, licensed under **LGPL v3**. The NMS wrapper system and advancement handling code are based on this original work.
 
 **Original UAA Authors:** fren_gor, EscanorTargaryen  
 **Original Project:** https://github.com/frengor/UltimateAdvancementAPI  
-**Original License:** GPL-3.0
+**Original License:** LGPL-3.0
 
 ## License
 This project is licensed under the **GNU General Public License v3.0** (same as the original UAA project).
 
-See `LICENSE` file for the full GPL v3 license terms.
+See `LICENSE` file for the full LGPL v3 license terms.
 
