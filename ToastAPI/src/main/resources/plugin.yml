@@ -1,10 +1,9 @@
 name: ToastAPI
-version: '${project.version}'
+version: 1.0.1
 main: com.frengor.toastapi.ToastPlugin
 api-version: '1.15'
 description: A lightweight Toast notification API for Minecraft servers
-author: fren_gor
-website: https://github.com/frengor/ToastAPI
+author: Perotin
 
 commands:
   toast:

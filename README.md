@@ -2,6 +2,10 @@
 
 A lightweight Minecraft plugin for displaying toast notifications across versions 1.19.4, 1.20.2, 1.20.4, 1.21, 1.21.4, 1.21.5
 
+## Versions Fully Tested
+1.21.5, 1.21.4, 1.21.3, 1.21.1
+1.20.6, 1.20.4, 1.20.2, 1.20.1
+
 ## Features
 - Simple toast notifications
 - Multi-version support (1.21, 1.20.1)
