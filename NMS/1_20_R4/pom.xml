@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.frengor</groupId>
         <artifactId>toastapi-nms-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>toastapi-nms-1_20_R4</artifactId>
@@ -16,10 +16,17 @@
     <packaging>jar</packaging>
 
     <properties>
+        <maven.compiler.release>21</maven.compiler.release>
         <mc-version>1.20.6-R0.1-SNAPSHOT</mc-version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${mc-version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- NMS Common Module -->
         <dependency>
             <groupId>com.frengor</groupId>

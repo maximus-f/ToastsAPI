@@ -1,8 +1,8 @@
-name: ToastAPI
-version: 1.0.1
-main: com.frengor.toastapi.ToastPlugin
-api-version: '1.15'
-description: A lightweight Toast notification API for Minecraft servers
+name: ToastsAPITest
+version: '${project.version}'
+main: com.frengor.toaststest.ToastPlugin
+api-version: '1.19'
+description: Standalone test plugin for the shadeable ToastsAPI library
 author: Perotin
 
 commands:
@@ -20,4 +20,4 @@ permissions:
     description: Gives access to all ToastAPI permissions
     default: op
     children:
-      toastapi.toast: true 
+      toastapi.toast: true
