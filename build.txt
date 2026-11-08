@@ -1,1 +1,0 @@
-mvn clean package -t ~/.m2/toolchains.xml

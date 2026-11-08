@@ -1,28 +1,34 @@
-package com.frengor.toastapi;
+package com.frengor.toaststest;
 
-import org.bukkit.Bukkit;
+import com.frengor.toastapi.AdvancementFrameType;
+import com.frengor.toastapi.ToastAPI;
+import com.frengor.toastapi.nms.util.Versions;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+import java.util.logging.Level;
+
 /**
  * Main plugin class for ToastAPI.
- * Provides commands and events to test toast functionality.
+ * Standalone consumer used to test toast functionality.
  */
-public class ToastPlugin extends JavaPlugin implements Listener {
+public class ToastPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Register events
-        Bukkit.getPluginManager().registerEvents(this, this);
-        
+        if (Versions.getNMSVersion().isEmpty()) {
+            getLogger().severe("Unsupported Minecraft version: " + getServer().getBukkitVersion()
+                    + ". Supported releases: " + Versions.SUPPORTED_RELEASES);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         getLogger().info("ToastAPI Plugin enabled! Use /toast <type> [message] to test toast notifications.");
         getLogger().info("Supported types: task, goal, challenge");
     }
@@ -34,7 +40,7 @@ public class ToastPlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("toastapi.usecmd")) {
+        if (!sender.hasPermission("toastapi.toast")) {
             sender.sendMessage("§cYou don't have permission to use this command!");
             return true;
         }
@@ -57,7 +63,7 @@ public class ToastPlugin extends JavaPlugin implements Listener {
         // Parse frame type
         AdvancementFrameType frameType;
         try {
-            frameType = AdvancementFrameType.valueOf(args[0].toUpperCase());
+            frameType = AdvancementFrameType.valueOf(args[0].toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             player.sendMessage("§cInvalid toast type! Use: task, goal, or challenge");
             return true;
@@ -78,14 +84,14 @@ public class ToastPlugin extends JavaPlugin implements Listener {
 
         try {
             ToastAPI.displayCustomToast(player, icon, "§a" + message, frameType);
-            player.sendMessage("§aSent " + frameType.name().toLowerCase() + " toast: §f" + message);
-        } catch (Exception e) {
+            player.sendMessage("§aSent " + frameType.name().toLowerCase(Locale.ROOT) + " toast: §f" + message);
+        } catch (RuntimeException | LinkageError e) {
             player.sendMessage("§cFailed to send toast: " + e.getMessage());
-            getLogger().warning("Failed to send toast to " + player.getName() + ": " + e.getMessage());
+            getLogger().log(Level.WARNING, "Failed to send toast to " + player.getName(), e);
         }
 
         return true;
     }
 
-    
-} 
+
+}

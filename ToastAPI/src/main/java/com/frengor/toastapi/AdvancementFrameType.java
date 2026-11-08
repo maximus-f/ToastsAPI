@@ -10,23 +10,17 @@ public enum AdvancementFrameType {
     /**
      * Task frame type (default square frame).
      */
-    TASK(AdvancementFrameTypeWrapper.TASK),
-    
+    TASK,
+
     /**
      * Goal frame type (fancy frame with a star).
      */
-    GOAL(AdvancementFrameTypeWrapper.GOAL),
-    
+    GOAL,
+
     /**
      * Challenge frame type (fancy frame with a dragon).
      */
-    CHALLENGE(AdvancementFrameTypeWrapper.CHALLENGE);
-
-    private final AdvancementFrameTypeWrapper nmsWrapper;
-
-    AdvancementFrameType(@NotNull AdvancementFrameTypeWrapper nmsWrapper) {
-        this.nmsWrapper = nmsWrapper;
-    }
+    CHALLENGE;
 
     /**
      * Gets the NMS wrapper for this frame type.
@@ -35,6 +29,10 @@ public enum AdvancementFrameType {
      */
     @NotNull
     public AdvancementFrameTypeWrapper getNMSWrapper() {
-        return nmsWrapper;
+        return switch (this) {
+            case TASK -> AdvancementFrameTypeWrapper.TASK;
+            case GOAL -> AdvancementFrameTypeWrapper.GOAL;
+            case CHALLENGE -> AdvancementFrameTypeWrapper.CHALLENGE;
+        };
     }
-} 
+}

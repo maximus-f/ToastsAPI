@@ -1,140 +1,169 @@
-# ToastAPI
+# ToastsAPI
 
-A lightweight Minecraft plugin for displaying toast notifications across versions 1.19.4, 1.20.2, 1.20.4, 1.21, 1.21.4, 1.21.5
+A small Minecraft toast notification library extracted from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI). Shade it into a Bukkit/Spigot plugin to display a toast with an item icon, title, and task/goal/challenge frame. It does not require the UAA plugin, a database, or an advancement progression system.
 
-## Versions Fully Tested
-1.21.5, 1.21.4, 1.21.3, 1.21.1
-1.20.6, 1.20.4, 1.20.2, 1.20.1
+The public Java package and Maven coordinates remain `com.frengor.toastapi` and `com.frengor:toastapi` for compatibility.
 
-## Features
-- Simple toast notifications
-- Multi-version support (1.21, 1.20.1)
-- Commands: `/toast <type> [message]`
-- Join event notifications
-- Permission system
+## Artifacts
 
-## Installation
-1. Download `ToastAPI-1.0.0.jar`
-2. Place in your `plugins/` folder
-3. Restart server
+| Module | Output | Purpose |
+| --- | --- | --- |
+| `ToastAPI` | `ToastAPI/target/toastapi-1.0.1.jar` | Shadeable library with all supported adapters. No `plugin.yml`, commands, or plugin entry point. |
+| `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.0.1.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
+| `NMS` | Internal adapter and distribution jars | Build inputs; do not install these in a server's plugins folder. |
 
-## Usage
+## Supported releases
+
+Only these release versions are accepted. Future patches and prereleases are rejected rather than assigned an older adapter.
+
+| Minecraft | Adapter | Runtime Java minimum |
+| --- | --- | --- |
+| 1.19.4 | `v1_19_R3` | 17 |
+| 1.20, 1.20.1 | `v1_20_R1` | 17 |
+| 1.20.2 | `v1_20_R2` | 17 |
+| 1.20.3, 1.20.4 | `v1_20_R3` | 17 |
+| 1.20.5, 1.20.6 | `v1_20_R4` | 21 |
+| 1.21, 1.21.1 | `v1_21_R1` | 21 |
+| 1.21.2, 1.21.3 | `v1_21_R2` | 21 |
+| 1.21.4 | `v1_21_R3` | 21 |
+| 1.21.5 | `v1_21_R4` | 21 |
+
+These are adapter targets, not a claim that every server/client combination has been tested. Historical 1.15–1.19.3 sources remain in the repository but are excluded from the build and distribution.
+
+The public library uses **Spigot mappings** and is intended for a conventional Bukkit plugin with `plugin.yml`. On supported Paper versions from 1.20.5, Paper normally remaps Spigot-mapped Bukkit plugins when loading them; see [Paper's mapping documentation](https://docs.papermc.io/paper/dev/userdev/#default-mappings-assumption). Do not combine this jar with a host plugin marked as Mojang-mapped. The internal `NMS/DistributionMojangMapped` artifact is not a complete public library. Native Mojang-mapped host plugins and Folia are not covered by this integration.
+
+## Build
+
+Requirements:
+
+- Maven 3.9 or newer.
+- JDK 21 or newer **running Maven** (`mvn -version` shows the selected JDK). Shared classes target Java 17; newer adapters target Java 21.
+- Local Spigot BuildTools outputs for **1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, and 1.21.5**. The full Spigot server jars cannot be downloaded from a public Maven repository.
+
+Run [Spigot BuildTools](https://www.spigotmc.org/wiki/buildtools/) with `--remapped` for each revision. Use a JDK supported by that Minecraft revision: Java 17 through 1.20.4, and Java 21 for 1.20.6 and 1.21.x. The helper uses `java` on your PATH:
+
+```sh
+# With Java 17 selected:
+bash install_spigot_jars.sh 1.19.4 1.20.1 1.20.2 1.20.4
+
+# With Java 21 selected:
+bash install_spigot_jars.sh 1.20.6 1.21.1 1.21.3 1.21.4 1.21.5
 ```
-/toast goal "Achievement unlocked!"
-/toast task "Quest completed!"
-/toast challenge "Boss defeated!"
+
+BuildTools installs the remapped Mojang/obfuscated jars, API, parent POMs and mapping tables. Preserve those POMs; manually installing only a jar is insufficient. Set `TOASTS_BUILD_DIR` to change the helper's working directory (default: `~/spigot-builds`).
+
+Then, with Maven running on JDK 21 or newer:
+
+```sh
+mvn clean verify
 ```
 
-## Permissions
-- `toastapi.toast` - Use /toast command
-- `toastapi.*` - All permissions
+`verify` runs version-selection tests and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. It does not start a Minecraft server or verify client rendering.
 
-## For Developers
+To install the library for another local Maven project:
 
-Want to use ToastAPI in your plugin? Follow these steps:
-
-### 1. Build and Install ToastAPI Locally
-
-First, clone and build ToastAPI:
-```bash
-git clone https://github.com/maximus-f/ToastsAPI.git
-cd ToastsAPI
+```sh
 mvn clean install
 ```
 
-This installs ToastAPI to your local Maven repository with:
-- **GroupId**: `com.frengor`
-- **ArtifactId**: `toastapi` 
-- **Version**: `1.0.0`
+All project modules use `1.0.1`. Maven Enforcer checks that module versions and parent references agree. No machine-specific `toolchains.xml` is needed.
 
-> **📦 Note**: ToastAPI uses a traditional distribution approach - we keep things simple and reliable by having you build from source and install locally. No complex remote repositories or dependency resolution headaches, just straightforward Maven installation that works every time.
+### Verify without old ToastsAPI artifacts
 
-### 2. Add as Dependency
+After preparing the BuildTools prerequisites:
 
-Add ToastAPI to your plugin's `pom.xml`:
-
-```xml
-
-<dependencies>
-    ... 
-    <!-- ToastAPI (installed locally) -->
-    <dependency>
-        <groupId>com.frengor</groupId>
-        <artifactId>toastapi</artifactId>
-        <version>1.0.1</version>
-    </dependency>
-</dependencies>
+```sh
+python3 scripts/verify_clean_build.py
 ```
 
-### 3. Shade ToastAPI into Your Plugin
+This creates an isolated Maven repository, copies **only** the required Spigot server/mapping/parent outputs, and runs `mvn clean verify`. It copies no ToastsAPI or UAA artifacts, no Maven plugins, and no other dependency caches; public dependencies are downloaded again. The repository and its seed manifest remain available for inspection.
 
-Use Maven Shade Plugin to include ToastAPI in your plugin:
+Optional arguments:
 
-```xml
-<build>
-    <plugins>
-        <!-- Shade ToastAPI into your plugin jar -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.1</version>
-            <configuration>
-                <createDependencyReducedPom>false</createDependencyReducedPom>
-                <minimizeJar>false</minimizeJar>
-                
-                <relocations>
-                    <relocation>
-                        <pattern>com.frengor.toastapi</pattern>
-                        <shadedPattern>your.package.libs.com.frengor.toastapi</shadedPattern>
-                    </relocation>
-                </relocations>
-                
-                <artifactSet>
-                    <includes>
-                        <include>com.frengor:toastapi</include>
-                    </includes>
-                </artifactSet>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
+```sh
+python3 scripts/verify_clean_build.py \
+  --buildtools-repository /path/to/buildtools/maven-repository \
+  --repository /path/to/empty/verification-repository
 ```
 
-### Basic Usage Example
+## Embed the library
+
+After `mvn clean install`, add this dependency to your plugin:
+
+```xml
+<dependency>
+    <groupId>com.frengor</groupId>
+    <artifactId>toastapi</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+
+Shade and relocate it into your plugin. Keep your own Bukkit/Paper API dependency `provided` and replace the example destination package:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.6.1</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+        </execution>
+    </executions>
+    <configuration>
+        <createDependencyReducedPom>false</createDependencyReducedPom>
+        <!-- Adapters are loaded reflectively; minimization can remove them. -->
+        <minimizeJar>false</minimizeJar>
+        <artifactSet>
+            <includes><include>com.frengor:toastapi</include></includes>
+        </artifactSet>
+        <relocations>
+            <relocation>
+                <pattern>com.frengor.toastapi</pattern>
+                <shadedPattern>your.plugin.libs.toastapi</shadedPattern>
+            </relocation>
+        </relocations>
+    </configuration>
+</plugin>
+```
+
+If you shade additional libraries, extend `artifactSet` to include them too. Do not add `depend: [ToastAPI]`: your plugin contains the library. The test plugin is not a runtime dependency.
+
+### Java usage
+
+Call from your plugin after the server has initialized, on the server thread:
+
 ```java
-import com.frengor.toastapi.ToastAPI;
 import com.frengor.toastapi.AdvancementFrameType;
+import com.frengor.toastapi.ToastAPI;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
-// Send a toast notification
-ToastAPI.getInstance().sendToast(
-    player,
-    Material.DIAMOND,
-    "Achievement Unlocked!",
-    AdvancementFrameType.GOAL
-);
+if (ToastAPI.isSupported()) {
+    ToastAPI.displayCustomToast(
+        player,
+        new ItemStack(Material.DIAMOND),
+        "Achievement unlocked!",
+        AdvancementFrameType.GOAL
+    );
+}
 ```
 
+`isSupported()` checks whether an adapter is included for the server release. `displayCustomToast` rejects unsupported releases and invalid arguments; reflection/linkage failures are reported to the caller. ItemStack icons retain their item metadata. No `getInstance()` call is required.
 
+## Test plugin
 
+Copy **only** `TestPlugin/target/toastapi-test-plugin-1.0.1.jar` into a supported server's `plugins/` directory and restart it. In game:
 
-## Attribution
-This project contains code derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, licensed under **LGPL v3**. The NMS wrapper system and advancement handling code are based on this original work.
+```text
+/toast task Quest completed!
+/toast goal Achievement unlocked!
+/toast challenge Boss defeated!
+```
 
-**Original UAA Authors:** fren_gor, EscanorTargaryen  
-**Original Project:** https://github.com/frengor/UltimateAdvancementAPI  
-**Original License:** LGPL-3.0
+The command accepts players only. Permission `toastapi.toast` defaults to operators; `toastapi.*` includes it. No join notification is registered. The test plugin disables itself on unsupported releases.
 
-## License
-This project is licensed under the **GNU General Public License v3.0** (same as the original UAA project).
+## Attribution and license
 
-See `LICENSE` file for the full LGPL v3 license terms.
-
+Derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, particularly its NMS wrappers and toast implementation. This project declares **LGPL-3.0-or-later** in its Maven metadata. See [LICENSE](LICENSE), [LGPL](LGPL), and [NOTICE](NOTICE); these notices are also included in the distributed library.
