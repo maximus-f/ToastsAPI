@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.frengor</groupId>
         <artifactId>toastapi-nms-parent</artifactId>
-        <version>1.1.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>toastapi-nms-1_20_R4</artifactId>
