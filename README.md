@@ -79,7 +79,15 @@ To install the library for another local Maven project:
 mvn clean install
 ```
 
-All project modules use `1.1.0`. Maven Enforcer checks that module versions and parent references agree. No machine-specific `toolchains.xml` is needed.
+The release version is defined once as `<revision>1.1.0</revision>` in the root `pom.xml`. Every module inherits it through `${revision}`; dependencies between modules use `${project.version}`. To bump the release, change that one property. For a temporary build version:
+
+```sh
+mvn -Drevision=1.1.1-SNAPSHOT clean install
+```
+
+The [Flatten Maven Plugin](https://www.mojohaus.org/flatten-maven-plugin/) resolves the version before packaging, so installed/published POMs contain concrete parent versions and work in other projects. Generated `.flattened-pom.xml` files are ignored by Git and removed by `mvn clean`. This follows [Maven's CI-friendly version setup](https://maven.apache.org/guides/mini/guide-maven-ci-friendly.html).
+
+The separate `mc-version` property in each adapter selects its Spigot compile target; it is independent of the ToastsAPI release version. Maven Enforcer checks that module versions and parent references agree. No machine-specific `toolchains.xml` is needed.
 
 ### Verify without old ToastsAPI artifacts
 

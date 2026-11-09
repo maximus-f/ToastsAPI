@@ -5,6 +5,8 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Test;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathFactory;
 import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
 import java.net.URLClassLoader;
@@ -23,6 +25,26 @@ public class PackagingIT {
     private static final List<String> REVISIONS = List.of("v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
             "v1_20_R4", "v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4",
             "v1_21_R5", "v1_21_R6", "v1_21_R7", "v26_1_R2", "v26_2_R1", "v26_3_R1");
+
+    @Test
+    public void packagedMavenMetadataHasResolvedVersionsAndNoShadedDependencies() throws Exception {
+        String[] artifacts = {"toastapi", "toastapi-test-plugin"};
+        String[] jarProperties = {"library.jar", "plugin.jar"};
+        var xpath = XPathFactory.newInstance().newXPath();
+        for (int i = 0; i < artifacts.length; i++) {
+            try (JarFile jar = new JarFile(System.getProperty(jarProperties[i]))) {
+                var entry = jar.getJarEntry("META-INF/maven/com.frengor/" + artifacts[i] + "/pom.xml");
+                assertNotNull(artifacts[i], entry);
+                try (var input = jar.getInputStream(entry)) {
+                    var pom = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+                    assertEquals(artifacts[i], System.getProperty("project.version"),
+                            xpath.evaluate("/project/parent/version", pom));
+                    assertEquals(artifacts[i], "0", xpath.evaluate(
+                            "count(/project/dependencies/dependency[groupId='com.frengor'])", pom));
+                }
+            }
+        }
+    }
 
     @Test
     public void libraryContainsOnlyTheLibraryAndAllAdapters() throws Exception {
