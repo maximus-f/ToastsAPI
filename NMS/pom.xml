@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.frengor</groupId>
         <artifactId>toastapi-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>toastapi-nms-parent</artifactId>
@@ -33,6 +33,12 @@
         <module>1_21_R2</module>
         <module>1_21_R3</module>
         <module>1_21_R4</module>
+        <module>1_21_R5</module>
+        <module>1_21_R6</module>
+        <module>1_21_R7</module>
+        <module>26_1_R2</module>
+        <module>26_2_R1</module>
+        <module>26_3_R1</module>
         <module>Distribution</module>
         <module>DistributionMojangMapped</module>
     </modules>

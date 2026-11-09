@@ -21,7 +21,8 @@ public class PackagingIT {
     private static final String ORIGINAL = "com/frengor/toastapi/";
     private static final String RELOCATED = "com/frengor/toaststest/internal/toastapi/";
     private static final List<String> REVISIONS = List.of("v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
-            "v1_20_R4", "v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4");
+            "v1_20_R4", "v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4",
+            "v1_21_R5", "v1_21_R6", "v1_21_R7", "v26_1_R2", "v26_2_R1", "v26_3_R1");
 
     @Test
     public void libraryContainsOnlyTheLibraryAndAllAdapters() throws Exception {
@@ -43,7 +44,8 @@ public class PackagingIT {
             for (var entry : library.stream().filter(e -> e.getName().endsWith(".class")).toList()) {
                 byte[] bytes = library.getInputStream(entry).readAllBytes();
                 int major = ((bytes[6] & 0xff) << 8) | (bytes[7] & 0xff);
-                boolean modernAdapter = entry.getName().contains("/v1_20_R4/") || entry.getName().contains("/v1_21_");
+                boolean modernAdapter = entry.getName().contains("/v1_20_R4/")
+                        || entry.getName().contains("/v1_21_") || entry.getName().contains("/v26_");
                 assertEquals(entry.getName(), modernAdapter ? 65 : 61, major);
             }
         }
@@ -69,7 +71,8 @@ public class PackagingIT {
         String[] currentVersion = {"1.19.4"};
         Server server = (Server) Proxy.newProxyInstance(Server.class.getClassLoader(), new Class<?>[]{Server.class},
                 (proxy, method, args) -> switch (method.getName()) {
-                    case "getBukkitVersion" -> currentVersion[0] + "-R0.1-SNAPSHOT";
+                    case "getBukkitVersion" -> currentVersion[0] + (currentVersion[0].startsWith("26.")
+                            ? ".build.10-stable" : "-R0.1-SNAPSHOT");
                     case "getName", "getVersion" -> "Packaging test";
                     case "getLogger" -> Logger.getLogger("PackagingIT");
                     default -> throw new UnsupportedOperationException(method.getName());
@@ -99,7 +102,8 @@ public class PackagingIT {
             assertSame(loader, api.getClassLoader());
             Class<?> reflection = loader.loadClass(prefix + "nms.util.ReflectionUtil");
             Class<?> key = loader.loadClass(prefix + "nms.wrappers.MinecraftKeyWrapper");
-            String[] releases = {"1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5"};
+            String[] releases = {"1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5",
+                    "1.21.6", "1.21.9", "1.21.11", "26.1.2", "26.2", "26.3"};
             for (int i = 0; i < releases.length; i++) {
                 currentVersion[0] = releases[i];
                 assertEquals(true, api.getMethod("isSupported").invoke(null));
@@ -107,14 +111,14 @@ public class PackagingIT {
                 assertEquals(prefix + "nms." + REVISIONS.get(i) + ".MinecraftKeyWrapper_" + REVISIONS.get(i), adapter.getName());
                 assertSame(loader, adapter.getClassLoader());
             }
-            currentVersion[0] = "1.21.6";
+            currentVersion[0] = "26.4";
             assertEquals(false, api.getMethod("isSupported").invoke(null));
             try {
                 reflection.getMethod("getWrapperClass", Class.class).invoke(null, key);
                 fail("An unsupported version must fail explicitly");
             } catch (java.lang.reflect.InvocationTargetException e) {
                 assertTrue(e.getCause() instanceof UnsupportedOperationException);
-                assertTrue(e.getCause().getMessage().contains("1.21.6"));
+                assertTrue(e.getCause().getMessage().contains("26.4"));
             }
         }
     }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.frengor</groupId>
     <artifactId>toastapi-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
     <name>ToastsAPI Parent</name>
     <description>A shadeable Minecraft toast notification library derived from UltimateAdvancementAPI.</description>
@@ -28,7 +28,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Build with JDK 21+, but keep shared code usable on Java 17 servers. -->
+        <!-- Build with JDK 25+, but keep shared code usable on Java 17 servers. -->
         <maven.compiler.release>17</maven.compiler.release>
         <spigot-api.version>1.19.4-R0.1-SNAPSHOT</spigot-api.version>
     </properties>
@@ -83,7 +83,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <createDependencyReducedPom>true</createDependencyReducedPom>
                         <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
@@ -151,7 +151,7 @@
                         <goals><goal>enforce</goal></goals>
                         <configuration>
                             <rules>
-                                <requireJavaVersion><version>[21,)</version></requireJavaVersion>
+                                <requireJavaVersion><version>[25,)</version></requireJavaVersion>
                                 <requireMavenVersion><version>[3.9,)</version></requireMavenVersion>
                                 <reactorModuleConvergence/>
                             </rules>
