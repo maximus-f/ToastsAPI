@@ -32,11 +32,7 @@ public class PacketPlayOutAdvancementsWrapper_v1_17_R1 extends PacketPlayOutAdva
         Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
         for (Entry<AdvancementWrapper, Integer> e : toSend.entrySet()) {
             AdvancementWrapper adv = e.getKey();
-            // For toast notifications, we just need a simple progress
-            AdvancementProgress progress = new AdvancementProgress();
-            progress.update(((Advancement) adv.toNMS()).getCriteria(), ((Advancement) adv.toNMS()).getRequirements());
-            progress.getCriterion("0").grant();
-            map.put((ResourceLocation) adv.getKey().toNMS(), progress);
+            map.put((ResourceLocation) adv.getKey().toNMS(), Util.getAdvancementProgress((Advancement) adv.toNMS(), e.getValue()));
         }
         this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<Advancement>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
     }
