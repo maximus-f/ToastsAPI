@@ -9,7 +9,7 @@ import java.util.Optional;
 /** Maps only releases covered by the adapters included in the distribution. */
 public final class Versions {
 
-    public static final String SUPPORTED_RELEASES = "1.19.4, 1.20–1.20.6, 1.21–1.21.11, 26.1–26.1.2, 26.2, 26.3";
+    public static final String SUPPORTED_RELEASES = "1.15–1.15.2, 1.16–1.16.5, 1.19.4, 1.20–1.20.6, 1.21–1.21.11, 26.1–26.1.2, 26.2, 26.3";
 
     /**
      * Gets the adapter for the current server.
@@ -38,6 +38,19 @@ public final class Versions {
         String release = bukkitVersion.replaceFirst(
                 "(?:-R[0-9]+\\.[0-9]+-SNAPSHOT|\\.build\\.[0-9]+-[a-z]+|\\.local-SNAPSHOT)$", "");
         switch (release) {
+            case "1.15":
+            case "1.15.1":
+            case "1.15.2":
+                return Optional.of("v1_15_R1");
+            case "1.16":
+            case "1.16.1":
+                return Optional.of("v1_16_R1");
+            case "1.16.2":
+            case "1.16.3":
+                return Optional.of("v1_16_R2");
+            case "1.16.4":
+            case "1.16.5":
+                return Optional.of("v1_16_R3");
             case "1.19.4":
                 return Optional.of("v1_19_R3");
             case "1.20":

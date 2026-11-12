@@ -73,7 +73,7 @@ public class AdvancementDisplayWrapper_v1_16_R3 extends AdvancementDisplayWrappe
     @NotNull
     public ItemStack getIcon() {
         try {
-            var item = (net.minecraft.server.v1_16_R3.ItemStack) iconField.get(display);
+            net.minecraft.server.v1_16_R3.ItemStack item = (net.minecraft.server.v1_16_R3.ItemStack) iconField.get(display);
             return CraftItemStack.asBukkitCopy(item);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
