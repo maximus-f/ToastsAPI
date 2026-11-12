@@ -83,8 +83,13 @@ public class PackagingIT {
             var descriptor = YamlConfiguration.loadConfiguration(new InputStreamReader(
                     plugin.getInputStream(plugin.getJarEntry("plugin.yml")), StandardCharsets.UTF_8));
             assertEquals("ToastsAPITest", descriptor.getString("name"));
+            assertEquals("1.15", descriptor.getString("api-version"));
             assertEquals(System.getProperty("project.version"), descriptor.getString("version"));
             assertNotNull(plugin.getEntry(descriptor.getString("main").replace('.', '/') + ".class"));
+            byte[] pluginClass = plugin.getInputStream(plugin.getJarEntry(
+                    descriptor.getString("main").replace('.', '/') + ".class")).readAllBytes();
+            assertEquals("Test plugin must load on Java 8", 52,
+                    ((pluginClass[6] & 0xff) << 8) | (pluginClass[7] & 0xff));
             assertEquals("toastapi.toast", descriptor.getString("commands.toast.permission"));
             assertNotNull(plugin.getEntry(RELOCATED + "ToastAPI.class"));
             assertFalse(plugin.stream().anyMatch(e -> e.getName().startsWith(ORIGINAL)));

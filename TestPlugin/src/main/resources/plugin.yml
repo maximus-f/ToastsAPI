@@ -1,7 +1,7 @@
 name: ToastsAPITest
 version: '${project.version}'
 main: com.frengor.toaststest.ToastPlugin
-api-version: '1.19'
+api-version: '1.15'
 description: Standalone test plugin for the shadeable ToastsAPI library
 author: Perotin
 

@@ -11,6 +11,10 @@
     <artifactId>toastapi-test-plugin</artifactId>
     <name>ToastsAPI Test Plugin</name>
     <description>Standalone /toast demo and a consumer of the shadeable library.</description>
+    <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.testRelease>17</maven.compiler.testRelease>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.frengor</groupId>
