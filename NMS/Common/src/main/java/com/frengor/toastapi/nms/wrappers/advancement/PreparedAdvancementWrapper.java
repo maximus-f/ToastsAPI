@@ -16,7 +16,7 @@ public abstract class PreparedAdvancementWrapper {
     private static Constructor<? extends PreparedAdvancementWrapper> constructor;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(PreparedAdvancementWrapper.class);
+        Class<? extends PreparedAdvancementWrapper> clazz = ReflectionUtil.getWrapperClass(PreparedAdvancementWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             constructor = clazz.getDeclaredConstructor(MinecraftKeyWrapper.class, AdvancementDisplayWrapper.class, int.class);

@@ -14,7 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Arrays;
 
 /**
  * Main class for the Toast API.
@@ -94,13 +96,14 @@ public class ToastAPI {
             AdvancementWrapper notification = AdvancementWrapper.craftBaseAdvancement(ToastState.NOTIFICATION_KEY, ToastState.ROOT, display, 1);
 
             // Send the advancement packet to display the toast
-            PacketPlayOutAdvancementsWrapper.craftSendPacket(Map.of(
-                    ToastState.ROOT, 1,
-                    notification, 1
-            )).sendTo(player);
+            Map<AdvancementWrapper, Integer> advancements = new HashMap<>();
+            advancements.put(ToastState.ROOT, 1);
+            advancements.put(notification, 1);
+            PacketPlayOutAdvancementsWrapper.craftSendPacket(advancements).sendTo(player);
 
             // Immediately remove the advancement to prevent it from staying in the advancement screen
-            PacketPlayOutAdvancementsWrapper.craftRemovePacket(Set.of(ToastState.ROOT_KEY, ToastState.NOTIFICATION_KEY)).sendTo(player);
+            PacketPlayOutAdvancementsWrapper.craftRemovePacket(
+                    new HashSet<>(Arrays.asList(ToastState.ROOT_KEY, ToastState.NOTIFICATION_KEY))).sendTo(player);
         } catch (ReflectiveOperationException | LinkageError e) {
             throw new IllegalStateException("Failed to send toast", e);
         }

@@ -26,7 +26,7 @@ public abstract class AdvancementFrameTypeWrapper extends AbstractWrapper {
     public static AdvancementFrameTypeWrapper CHALLENGE;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(AdvancementFrameTypeWrapper.class);
+        Class<? extends AdvancementFrameTypeWrapper> clazz = ReflectionUtil.getWrapperClass(AdvancementFrameTypeWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             Constructor<? extends AdvancementFrameTypeWrapper> constructor = clazz.getDeclaredConstructor(FrameType.class);

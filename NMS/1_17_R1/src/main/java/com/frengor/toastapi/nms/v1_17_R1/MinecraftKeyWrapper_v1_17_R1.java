@@ -35,7 +35,10 @@ public class MinecraftKeyWrapper_v1_17_R1 extends MinecraftKeyWrapper {
 
     @Override
     public int compareTo(@NotNull MinecraftKeyWrapper obj) {
-        return key.compareTo((ResourceLocation) obj.toNMS());
+        // The 1.17 mappings rename the typed overload inconsistently with the
+        // runtime jar. Comparable's erased bridge keeps its Java method name.
+        Comparable<ResourceLocation> comparable = key;
+        return comparable.compareTo((ResourceLocation) obj.toNMS());
     }
 
     @Override

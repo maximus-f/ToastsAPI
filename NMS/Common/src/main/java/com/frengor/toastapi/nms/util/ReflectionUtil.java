@@ -21,7 +21,7 @@ public final class ReflectionUtil {
 
     @Nullable
     public static Class<?> getCBClass(@NotNull String name) {
-        return findClass(Bukkit.getServer().getClass().getPackageName() + '.' + name);
+        return findClass(Bukkit.getServer().getClass().getPackage().getName() + '.' + name);
     }
 
     @Nullable
@@ -48,7 +48,7 @@ public final class ReflectionUtil {
                 "Unsupported Minecraft version: " + Bukkit.getBukkitVersion()
                         + ". Supported releases: " + Versions.SUPPORTED_RELEASES));
         // Derive the prefix from a class reference, which Maven Shade relocates reliably.
-        String wrapperPackage = AbstractWrapper.class.getPackageName();
+        String wrapperPackage = AbstractWrapper.class.getPackage().getName();
         String validPackage = wrapperPackage + '.';
         String name = clazz.getName();
         if (!name.startsWith(validPackage)) {

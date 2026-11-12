@@ -22,7 +22,7 @@ public class ToastPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (Versions.getNMSVersion().isEmpty()) {
+        if (!Versions.getNMSVersion().isPresent()) {
             getLogger().severe("Unsupported Minecraft version: " + getServer().getBukkitVersion()
                     + ". Supported releases: " + Versions.SUPPORTED_RELEASES);
             getServer().getPluginManager().disablePlugin(this);
@@ -49,10 +49,11 @@ public class ToastPlugin extends JavaPlugin {
             return false;
         }
 
-        if (!(sender instanceof Player player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("§cThis command can only be used by players!");
             return true;
         }
+        Player player = (Player) sender;
 
         if (args.length == 0) {
             player.sendMessage("§eUsage: /toast <task|goal|challenge> [message]");
@@ -76,11 +77,13 @@ public class ToastPlugin extends JavaPlugin {
         }
 
         // Choose icon based on frame type
-        ItemStack icon = switch (frameType) {
-            case TASK -> new ItemStack(Material.GRASS_BLOCK);
-            case GOAL -> new ItemStack(Material.DIAMOND);
-            case CHALLENGE -> new ItemStack(Material.DRAGON_HEAD);
-        };
+        ItemStack icon;
+        switch (frameType) {
+            case TASK: icon = new ItemStack(Material.GRASS_BLOCK); break;
+            case GOAL: icon = new ItemStack(Material.DIAMOND); break;
+            case CHALLENGE: icon = new ItemStack(Material.DRAGON_HEAD); break;
+            default: throw new AssertionError(frameType);
+        }
 
         try {
             ToastAPI.displayCustomToast(player, icon, "§a" + message, frameType);

@@ -27,12 +27,12 @@
 
     <properties>
         <!-- The release version for every module; override with -Drevision=... if needed. -->
-        <revision>1.1.0</revision>
+        <revision>1.2.0</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Build with JDK 25+, but keep shared code usable on Java 17 servers. -->
+        <!-- Build with JDK 25+; modules targeting older runtimes override this default. -->
         <maven.compiler.release>17</maven.compiler.release>
-        <spigot-api.version>1.19.4-R0.1-SNAPSHOT</spigot-api.version>
+        <spigot-api.version>1.15.2-R0.1-SNAPSHOT</spigot-api.version>
     </properties>
 
     <repositories>

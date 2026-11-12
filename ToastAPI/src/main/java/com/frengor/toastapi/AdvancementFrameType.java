@@ -29,10 +29,11 @@ public enum AdvancementFrameType {
      */
     @NotNull
     public AdvancementFrameTypeWrapper getNMSWrapper() {
-        return switch (this) {
-            case TASK -> AdvancementFrameTypeWrapper.TASK;
-            case GOAL -> AdvancementFrameTypeWrapper.GOAL;
-            case CHALLENGE -> AdvancementFrameTypeWrapper.CHALLENGE;
-        };
+        switch (this) {
+            case TASK: return AdvancementFrameTypeWrapper.TASK;
+            case GOAL: return AdvancementFrameTypeWrapper.GOAL;
+            case CHALLENGE: return AdvancementFrameTypeWrapper.CHALLENGE;
+            default: throw new AssertionError(this);
+        }
     }
 }

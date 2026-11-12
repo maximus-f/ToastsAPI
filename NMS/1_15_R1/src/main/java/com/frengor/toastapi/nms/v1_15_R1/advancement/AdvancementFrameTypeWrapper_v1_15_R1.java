@@ -11,11 +11,12 @@ public class AdvancementFrameTypeWrapper_v1_15_R1 extends AdvancementFrameTypeWr
 
     public AdvancementFrameTypeWrapper_v1_15_R1(@NotNull FrameType frameType) {
         this.frameType = frameType;
-        this.mcFrameType = switch (frameType) {
-            case TASK -> AdvancementFrameType.TASK;
-            case GOAL -> AdvancementFrameType.GOAL;
-            case CHALLENGE -> AdvancementFrameType.CHALLENGE;
-        };
+        switch (frameType) {
+            case TASK: this.mcFrameType = AdvancementFrameType.TASK; break;
+            case GOAL: this.mcFrameType = AdvancementFrameType.GOAL; break;
+            case CHALLENGE: this.mcFrameType = AdvancementFrameType.CHALLENGE; break;
+            default: throw new AssertionError(frameType);
+        }
     }
 
     @Override

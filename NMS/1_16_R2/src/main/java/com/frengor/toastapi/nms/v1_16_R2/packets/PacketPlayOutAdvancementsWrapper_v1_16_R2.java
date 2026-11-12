@@ -6,10 +6,10 @@ import com.frengor.toastapi.nms.wrappers.MinecraftKeyWrapper;
 import com.frengor.toastapi.nms.wrappers.advancement.AdvancementWrapper;
 import com.frengor.toastapi.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.collect.Maps;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.v1_16_R2.Advancement;
+import net.minecraft.server.v1_16_R2.AdvancementProgress;
+import net.minecraft.server.v1_16_R2.MinecraftKey;
+import net.minecraft.server.v1_16_R2.PacketPlayOutAdvancements;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,29 +21,25 @@ import java.util.Set;
 
 public class PacketPlayOutAdvancementsWrapper_v1_16_R2 extends PacketPlayOutAdvancementsWrapper {
 
-    private final ClientboundUpdateAdvancementsPacket packet;
+    private final PacketPlayOutAdvancements packet;
 
     public PacketPlayOutAdvancementsWrapper_v1_16_R2() {
-        this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
+        this.packet = new PacketPlayOutAdvancements(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
     }
 
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_16_R2(@NotNull Map<AdvancementWrapper, Integer> toSend) {
-        Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
+        Map<MinecraftKey, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
         for (Entry<AdvancementWrapper, Integer> e : toSend.entrySet()) {
             AdvancementWrapper adv = e.getKey();
-            // For toast notifications, we just need a simple progress
-            AdvancementProgress progress = new AdvancementProgress();
-            progress.update(((Advancement) adv.toNMS()).getCriteria(), ((Advancement) adv.toNMS()).getRequirements());
-            progress.getCriterion("0").grant();
-            map.put((ResourceLocation) adv.getKey().toNMS(), progress);
+            map.put((MinecraftKey) adv.getKey().toNMS(), Util.getAdvancementProgress((Advancement) adv.toNMS(), e.getValue()));
         }
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, (Collection<Advancement>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
+        this.packet = new PacketPlayOutAdvancements(false, (Collection<Advancement>) ListSet.fromWrapperSet(toSend.keySet()), Collections.emptySet(), map);
     }
 
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_16_R2(@NotNull Set<MinecraftKeyWrapper> toRemove) {
-        this.packet = new ClientboundUpdateAdvancementsPacket(false, Collections.emptyList(), (Set<ResourceLocation>) ListSet.fromWrapperSet(toRemove), Collections.emptyMap());
+        this.packet = new PacketPlayOutAdvancements(false, Collections.emptyList(), (Set<MinecraftKey>) ListSet.fromWrapperSet(toRemove), Collections.emptyMap());
     }
 
     @Override

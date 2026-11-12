@@ -22,7 +22,8 @@ import static org.junit.Assert.*;
 public class PackagingIT {
     private static final String ORIGINAL = "com/frengor/toastapi/";
     private static final String RELOCATED = "com/frengor/toaststest/internal/toastapi/";
-    private static final List<String> REVISIONS = List.of("v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
+    private static final List<String> REVISIONS = List.of("v1_15_R1", "v1_16_R1", "v1_16_R2", "v1_16_R3",
+            "v1_17_R1", "v1_18_R1", "v1_18_R2", "v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
             "v1_20_R4", "v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4",
             "v1_21_R5", "v1_21_R6", "v1_21_R7", "v26_1_R2", "v26_2_R1", "v26_3_R1");
 
@@ -68,7 +69,9 @@ public class PackagingIT {
                 int major = ((bytes[6] & 0xff) << 8) | (bytes[7] & 0xff);
                 boolean modernAdapter = entry.getName().contains("/v1_20_R4/")
                         || entry.getName().contains("/v1_21_") || entry.getName().contains("/v26_");
-                assertEquals(entry.getName(), modernAdapter ? 65 : 61, major);
+                boolean sharedClass = !entry.getName().matches(".*/nms/v[^/]+/.*")
+                        || entry.getName().contains("/v1_15_") || entry.getName().contains("/v1_16_");
+                assertEquals(entry.getName(), sharedClass ? 52 : entry.getName().contains("/v1_17_") ? 60 : modernAdapter ? 65 : 61, major);
             }
         }
     }
@@ -80,8 +83,13 @@ public class PackagingIT {
             var descriptor = YamlConfiguration.loadConfiguration(new InputStreamReader(
                     plugin.getInputStream(plugin.getJarEntry("plugin.yml")), StandardCharsets.UTF_8));
             assertEquals("ToastsAPITest", descriptor.getString("name"));
+            assertEquals("1.15", descriptor.getString("api-version"));
             assertEquals(System.getProperty("project.version"), descriptor.getString("version"));
             assertNotNull(plugin.getEntry(descriptor.getString("main").replace('.', '/') + ".class"));
+            byte[] pluginClass = plugin.getInputStream(plugin.getJarEntry(
+                    descriptor.getString("main").replace('.', '/') + ".class")).readAllBytes();
+            assertEquals("Test plugin must load on Java 8", 52,
+                    ((pluginClass[6] & 0xff) << 8) | (pluginClass[7] & 0xff));
             assertEquals("toastapi.toast", descriptor.getString("commands.toast.permission"));
             assertNotNull(plugin.getEntry(RELOCATED + "ToastAPI.class"));
             assertFalse(plugin.stream().anyMatch(e -> e.getName().startsWith(ORIGINAL)));
@@ -124,7 +132,7 @@ public class PackagingIT {
             assertSame(loader, api.getClassLoader());
             Class<?> reflection = loader.loadClass(prefix + "nms.util.ReflectionUtil");
             Class<?> key = loader.loadClass(prefix + "nms.wrappers.MinecraftKeyWrapper");
-            String[] releases = {"1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5",
+            String[] releases = {"1.15.2", "1.16.1", "1.16.3", "1.16.5", "1.17.1", "1.18.1", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5",
                     "1.21.6", "1.21.9", "1.21.11", "26.1.2", "26.2", "26.3"};
             for (int i = 0; i < releases.length; i++) {
                 currentVersion[0] = releases[i];
