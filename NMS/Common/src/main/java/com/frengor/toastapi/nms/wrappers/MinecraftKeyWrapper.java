@@ -15,7 +15,7 @@ public abstract class MinecraftKeyWrapper extends AbstractWrapper implements Com
     private static Constructor<? extends MinecraftKeyWrapper> minecraftKeyConstructor, namespacedKeyConstructor;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(MinecraftKeyWrapper.class);
+        Class<? extends MinecraftKeyWrapper> clazz = ReflectionUtil.getWrapperClass(MinecraftKeyWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             minecraftKeyConstructor = clazz.getDeclaredConstructor(Object.class);

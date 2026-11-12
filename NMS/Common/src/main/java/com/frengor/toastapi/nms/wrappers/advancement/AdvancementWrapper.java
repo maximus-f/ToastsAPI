@@ -18,7 +18,7 @@ public abstract class AdvancementWrapper extends AbstractWrapper {
     private MinecraftKeyWrapper key;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(AdvancementWrapper.class);
+        Class<? extends AdvancementWrapper> clazz = ReflectionUtil.getWrapperClass(AdvancementWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             rootAdvancementWrapperConstructor = clazz.getDeclaredConstructor(MinecraftKeyWrapper.class, AdvancementDisplayWrapper.class, int.class);

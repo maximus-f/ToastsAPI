@@ -16,6 +16,10 @@
     <name>ToastAPI</name>
     <description>Shadeable toast library; contains no Bukkit plugin entry point.</description>
 
+    <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>

@@ -37,24 +37,49 @@ public final class Versions {
         // Strip known server build suffixes, preserving Minecraft's -pre/-rc/-snapshot suffixes.
         String release = bukkitVersion.replaceFirst(
                 "(?:-R[0-9]+\\.[0-9]+-SNAPSHOT|\\.build\\.[0-9]+-[a-z]+|\\.local-SNAPSHOT)$", "");
-        return Optional.ofNullable(switch (release) {
-            case "1.19.4" -> "v1_19_R3";
-            case "1.20", "1.20.1" -> "v1_20_R1";
-            case "1.20.2" -> "v1_20_R2";
-            case "1.20.3", "1.20.4" -> "v1_20_R3";
-            case "1.20.5", "1.20.6" -> "v1_20_R4";
-            case "1.21", "1.21.1" -> "v1_21_R1";
-            case "1.21.2", "1.21.3" -> "v1_21_R2";
-            case "1.21.4" -> "v1_21_R3";
-            case "1.21.5" -> "v1_21_R4";
-            case "1.21.6", "1.21.7", "1.21.8" -> "v1_21_R5";
-            case "1.21.9", "1.21.10" -> "v1_21_R6";
-            case "1.21.11" -> "v1_21_R7";
-            case "26.1", "26.1.1", "26.1.2" -> "v26_1_R2";
-            case "26.2" -> "v26_2_R1";
-            case "26.3" -> "v26_3_R1";
-            default -> null;
-        });
+        switch (release) {
+            case "1.19.4":
+                return Optional.of("v1_19_R3");
+            case "1.20":
+            case "1.20.1":
+                return Optional.of("v1_20_R1");
+            case "1.20.2":
+                return Optional.of("v1_20_R2");
+            case "1.20.3":
+            case "1.20.4":
+                return Optional.of("v1_20_R3");
+            case "1.20.5":
+            case "1.20.6":
+                return Optional.of("v1_20_R4");
+            case "1.21":
+            case "1.21.1":
+                return Optional.of("v1_21_R1");
+            case "1.21.2":
+            case "1.21.3":
+                return Optional.of("v1_21_R2");
+            case "1.21.4":
+                return Optional.of("v1_21_R3");
+            case "1.21.5":
+                return Optional.of("v1_21_R4");
+            case "1.21.6":
+            case "1.21.7":
+            case "1.21.8":
+                return Optional.of("v1_21_R5");
+            case "1.21.9":
+            case "1.21.10":
+                return Optional.of("v1_21_R6");
+            case "1.21.11":
+                return Optional.of("v1_21_R7");
+            case "26.1":
+            case "26.1.1":
+            case "26.1.2":
+                return Optional.of("v26_1_R2");
+            case "26.2":
+                return Optional.of("v26_2_R1");
+            case "26.3":
+                return Optional.of("v26_3_R1");
+            default: return Optional.empty();
+        }
     }
 
     private Versions() {

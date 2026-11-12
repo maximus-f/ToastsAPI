@@ -16,6 +16,8 @@
     <packaging>jar</packaging>
 
     <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.testRelease>17</maven.compiler.testRelease>
         <!-- Skip deploy -->
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

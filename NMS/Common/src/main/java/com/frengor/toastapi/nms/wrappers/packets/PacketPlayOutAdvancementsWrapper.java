@@ -17,7 +17,7 @@ public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
     private static Constructor<? extends PacketPlayOutAdvancementsWrapper> resetConstructor, sendConstructor, removeConstructor;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(PacketPlayOutAdvancementsWrapper.class);
+        Class<? extends PacketPlayOutAdvancementsWrapper> clazz = ReflectionUtil.getWrapperClass(PacketPlayOutAdvancementsWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             resetConstructor = clazz.getDeclaredConstructor();

@@ -81,7 +81,7 @@ public final class ListSet<E> extends AbstractSet<E> implements Set<E> {
     @Override
     @NotNull
     public Iterator<E> iterator() {
-        return new Iterator<>() {
+        return new Iterator<E>() {
             private final AtomicInteger current = new AtomicInteger(0);
 
             @Override

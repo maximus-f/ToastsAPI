@@ -18,7 +18,7 @@ public abstract class AdvancementDisplayWrapper extends AbstractWrapper {
     private static Constructor<? extends AdvancementDisplayWrapper> componentConstructor;
 
     static {
-        var clazz = ReflectionUtil.getWrapperClass(AdvancementDisplayWrapper.class);
+        Class<? extends AdvancementDisplayWrapper> clazz = ReflectionUtil.getWrapperClass(AdvancementDisplayWrapper.class);
         assert clazz != null : "Wrapper class is null.";
         try {
             constructor = clazz.getDeclaredConstructor(ItemStack.class, String.class, String.class, AdvancementFrameTypeWrapper.class, float.class, float.class, boolean.class, boolean.class, boolean.class, String.class);

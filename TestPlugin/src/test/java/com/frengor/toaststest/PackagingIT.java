@@ -68,7 +68,8 @@ public class PackagingIT {
                 int major = ((bytes[6] & 0xff) << 8) | (bytes[7] & 0xff);
                 boolean modernAdapter = entry.getName().contains("/v1_20_R4/")
                         || entry.getName().contains("/v1_21_") || entry.getName().contains("/v26_");
-                assertEquals(entry.getName(), modernAdapter ? 65 : 61, major);
+                boolean sharedClass = !entry.getName().matches(".*/nms/v[^/]+/.*");
+                assertEquals(entry.getName(), sharedClass ? 52 : modernAdapter ? 65 : 61, major);
             }
         }
     }
