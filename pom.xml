@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.frengor</groupId>
     <artifactId>toastapi-parent</artifactId>
-    <version>1.0.1</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>ToastsAPI Parent</name>
     <description>A shadeable Minecraft toast notification library derived from UltimateAdvancementAPI.</description>
@@ -26,9 +26,11 @@
     </modules>
 
     <properties>
+        <!-- The release version for every module; override with -Drevision=... if needed. -->
+        <revision>1.1.0</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Build with JDK 21+, but keep shared code usable on Java 17 servers. -->
+        <!-- Build with JDK 25+, but keep shared code usable on Java 17 servers. -->
         <maven.compiler.release>17</maven.compiler.release>
         <spigot-api.version>1.19.4-R0.1-SNAPSHOT</spigot-api.version>
     </properties>
@@ -83,7 +85,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.6.2</version>
                     <configuration>
                         <createDependencyReducedPom>true</createDependencyReducedPom>
                         <useDependencyReducedPomInJar>true</useDependencyReducedPomInJar>
@@ -142,6 +144,27 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>resolve-release-version</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>flatten</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>clean-resolved-pom</id>
+                        <phase>clean</phase>
+                        <goals><goal>clean</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.5.0</version>
@@ -151,7 +174,7 @@
                         <goals><goal>enforce</goal></goals>
                         <configuration>
                             <rules>
-                                <requireJavaVersion><version>[21,)</version></requireJavaVersion>
+                                <requireJavaVersion><version>[25,)</version></requireJavaVersion>
                                 <requireMavenVersion><version>[3.9,)</version></requireMavenVersion>
                                 <reactorModuleConvergence/>
                             </rules>

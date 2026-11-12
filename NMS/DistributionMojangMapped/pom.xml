@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.frengor</groupId>
         <artifactId>toastapi-nms-parent</artifactId>
-        <version>1.0.1</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>toastapi-nms-distribution-mojang-mapped</artifactId>
@@ -71,6 +71,39 @@
             <version>${project.version}</version>
             <classifier>mojang-mapped</classifier>
         </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-1_21_R5</artifactId>
+            <version>${project.version}</version>
+            <classifier>mojang-mapped</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-1_21_R6</artifactId>
+            <version>${project.version}</version>
+            <classifier>mojang-mapped</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-1_21_R7</artifactId>
+            <version>${project.version}</version>
+            <classifier>mojang-mapped</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-26_1_R2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-26_2_R1</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>toastapi-nms-26_3_R1</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -114,6 +147,18 @@
                         </relocation>
                         <relocation>
                             <pattern>org.bukkit.craftbukkit.v1_21_R4</pattern>
+                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bukkit.craftbukkit.v1_21_R5</pattern>
+                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bukkit.craftbukkit.v1_21_R6</pattern>
+                            <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bukkit.craftbukkit.v1_21_R7</pattern>
                             <shadedPattern>org.bukkit.craftbukkit</shadedPattern>
                         </relocation>
                     </relocations>

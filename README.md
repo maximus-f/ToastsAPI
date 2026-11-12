@@ -8,8 +8,8 @@ The public Java package and Maven coordinates remain `com.frengor.toastapi` and 
 
 | Module | Output | Purpose |
 | --- | --- | --- |
-| `ToastAPI` | `ToastAPI/target/toastapi-1.0.1.jar` | Shadeable library with all supported adapters. No `plugin.yml`, commands, or plugin entry point. |
-| `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.0.1.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
+| `ToastAPI` | `ToastAPI/target/toastapi-1.1.0.jar` | Shadeable library with all supported adapters. No `plugin.yml`, commands, or plugin entry point. |
+| `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.1.0.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
 | `NMS` | Internal adapter and distribution jars | Build inputs; do not install these in a server's plugins folder. |
 
 ## Supported releases
@@ -27,38 +27,51 @@ Only these release versions are accepted. Future patches and prereleases are rej
 | 1.21.2, 1.21.3 | `v1_21_R2` | 21 |
 | 1.21.4 | `v1_21_R3` | 21 |
 | 1.21.5 | `v1_21_R4` | 21 |
+| 1.21.6, 1.21.7, 1.21.8 | `v1_21_R5` | 21 |
+| 1.21.9, 1.21.10 | `v1_21_R6` | 21 |
+| 1.21.11 | `v1_21_R7` | 21 |
+| 26.1, 26.1.1, 26.1.2 | `v26_1_R2` | 25 |
+| 26.2 | `v26_2_R1` | 25 |
+| 26.3 | `v26_3_R1` | 25 |
 
 These are adapter targets, not a claim that every server/client combination has been tested. Historical 1.15–1.19.3 sources remain in the repository but are excluded from the build and distribution.
 
-The public library uses **Spigot mappings** and is intended for a conventional Bukkit plugin with `plugin.yml`. On supported Paper versions from 1.20.5, Paper normally remaps Spigot-mapped Bukkit plugins when loading them; see [Paper's mapping documentation](https://docs.papermc.io/paper/dev/userdev/#default-mappings-assumption). Do not combine this jar with a host plugin marked as Mojang-mapped. The internal `NMS/DistributionMojangMapped` artifact is not a complete public library. Native Mojang-mapped host plugins and Folia are not covered by this integration.
+Version detection accepts Spigot's `-R0.1-SNAPSHOT` suffix and Paper's newer `.build.<number>-<channel>` / `.local-SNAPSHOT` suffixes. Minecraft prereleases and snapshots remain unsupported.
+
+The public library is intended for a conventional Bukkit plugin with `plugin.yml`. Its adapters through 1.21.11 use **Spigot mappings**; Paper 1.20.5–1.21.11 remaps those Bukkit plugins when loading them. Minecraft 26.x ships unobfuscated, so its adapters use the native names and skip remapping. See [Paper's mapping documentation](https://docs.papermc.io/paper/dev/userdev/).
+
+For a host plugin that also supports releases before 26.1, do not mark the host as Mojang-mapped when embedding this public jar. The internal `NMS/DistributionMojangMapped` artifact is not a complete public library. Native Mojang-mapped hosts on older releases and Folia are not covered by this integration. Future 26.x releases and snapshots are rejected until an adapter has been checked and explicitly added.
 
 ## Build
 
 Requirements:
 
 - Maven 3.9 or newer.
-- JDK 21 or newer **running Maven** (`mvn -version` shows the selected JDK). Shared classes target Java 17; newer adapters target Java 21.
-- Local Spigot BuildTools outputs for **1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, and 1.21.5**. The full Spigot server jars cannot be downloaded from a public Maven repository.
+- JDK 25 or newer **running Maven** (`mvn -version` shows the selected JDK). Shared classes target Java 17; newer adapters target Java 21, including the 26.x adapters. Keeping their bytecode at Java 21 lets older supported Paper remappers read the combined jar. The 26.x adapters still require a Java 25 server at runtime.
+- Local Spigot BuildTools outputs for **1.19.4, 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21.1, 1.21.3, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1.2, 26.2, and 26.3**. The full Spigot server jars cannot be downloaded from a public Maven repository.
 
-Run [Spigot BuildTools](https://www.spigotmc.org/wiki/buildtools/) with `--remapped` for each revision. Use a JDK supported by that Minecraft revision: Java 17 through 1.20.4, and Java 21 for 1.20.6 and 1.21.x. The helper uses `java` on your PATH:
+Run [Spigot BuildTools](https://www.spigotmc.org/wiki/buildtools/) with Java 17 through 1.20.4, Java 21 for 1.20.6 and 1.21.x, and Java 25 for 26.x. The helper uses `JAVA_HOME/bin/java` when set, otherwise `java` on your PATH. It refreshes BuildTools and requests `--remapped` only for the older, obfuscated releases:
 
 ```sh
 # With Java 17 selected:
 bash install_spigot_jars.sh 1.19.4 1.20.1 1.20.2 1.20.4
 
 # With Java 21 selected:
-bash install_spigot_jars.sh 1.20.6 1.21.1 1.21.3 1.21.4 1.21.5
+bash install_spigot_jars.sh 1.20.6 1.21.1 1.21.3 1.21.4 1.21.5 1.21.8 1.21.10 1.21.11
+
+# With Java 25 selected:
+bash install_spigot_jars.sh 26.1.2 26.2 26.3
 ```
 
-BuildTools installs the remapped Mojang/obfuscated jars, API, parent POMs and mapping tables. Preserve those POMs; manually installing only a jar is insufficient. Set `TOASTS_BUILD_DIR` to change the helper's working directory (default: `~/spigot-builds`).
+BuildTools installs server jars, API and parent POMs, plus remapped Mojang/obfuscated jars and mapping tables for releases before 26.1. Preserve those POMs; manually installing only a jar is insufficient. Set `TOASTS_BUILD_DIR` to change the helper's working directory (default: `~/spigot-builds`).
 
-Then, with Maven running on JDK 21 or newer:
+Then, with Maven running on JDK 25 or newer:
 
 ```sh
 mvn clean verify
 ```
 
-`verify` runs version-selection tests and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. It does not start a Minecraft server or verify client rendering.
+`verify` runs version-selection tests, constructs and encodes/decodes real advancement packets for all three toast styles against each of the six new adapter targets, and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. The adapter tests bootstrap Minecraft registries without starting a server or opening network ports. They do not verify client rendering or every patch release in each adapter group.
 
 To install the library for another local Maven project:
 
@@ -66,7 +79,15 @@ To install the library for another local Maven project:
 mvn clean install
 ```
 
-All project modules use `1.0.1`. Maven Enforcer checks that module versions and parent references agree. No machine-specific `toolchains.xml` is needed.
+The release version is defined once as `<revision>1.1.0</revision>` in the root `pom.xml`. Every module inherits it through `${revision}`; dependencies between modules use `${project.version}`. To bump the release, change that one property. For a temporary build version:
+
+```sh
+mvn -Drevision=1.1.1-SNAPSHOT clean install
+```
+
+The [Flatten Maven Plugin](https://www.mojohaus.org/flatten-maven-plugin/) resolves the version before packaging, so installed/published POMs contain concrete parent versions and work in other projects. Generated `.flattened-pom.xml` files are ignored by Git and removed by `mvn clean`. This follows [Maven's CI-friendly version setup](https://maven.apache.org/guides/mini/guide-maven-ci-friendly.html).
+
+The separate `mc-version` property in each adapter selects its Spigot compile target; it is independent of the ToastsAPI release version. Maven Enforcer checks that module versions and parent references agree. No machine-specific `toolchains.xml` is needed.
 
 ### Verify without old ToastsAPI artifacts
 
@@ -94,7 +115,7 @@ After `mvn clean install`, add this dependency to your plugin:
 <dependency>
     <groupId>com.frengor</groupId>
     <artifactId>toastapi</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -104,7 +125,7 @@ Shade and relocate it into your plugin. Keep your own Bukkit/Paper API dependenc
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
     <executions>
         <execution>
             <phase>package</phase>
@@ -154,7 +175,7 @@ if (ToastAPI.isSupported()) {
 
 ## Test plugin
 
-Copy **only** `TestPlugin/target/toastapi-test-plugin-1.0.1.jar` into a supported server's `plugins/` directory and restart it. In game:
+Copy **only** `TestPlugin/target/toastapi-test-plugin-1.1.0.jar` into a supported server's `plugins/` directory and restart it. In game:
 
 ```text
 /toast task Quest completed!
@@ -165,5 +186,7 @@ Copy **only** `TestPlugin/target/toastapi-test-plugin-1.0.1.jar` into a supporte
 The command accepts players only. Permission `toastapi.toast` defaults to operators; `toastapi.*` includes it. No join notification is registered. The test plugin disables itself on unsupported releases.
 
 ## Attribution and license
+
+The adapters for 1.21.6–26.3 are adapted from UAA 2.8.2, commit [`dfbcbb4`](https://github.com/frengor/UltimateAdvancementAPI/tree/dfbcbb4c6988fe570eb63454833b65f0ea524ffa). Only the identifier, display, advancement, frame, packet and supporting utility classes are included.
 
 Derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, particularly its NMS wrappers and toast implementation. This project declares **LGPL-3.0-or-later** in its Maven metadata. See [LICENSE](LICENSE), [LGPL](LGPL), and [NOTICE](NOTICE); these notices are also included in the distributed library.

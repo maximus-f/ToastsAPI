@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'Maven'
-        jdk 'jdk21'
+        jdk 'jdk25'
     }
     stages {
         stage('Build and verify') {
