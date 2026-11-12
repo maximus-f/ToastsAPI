@@ -16,6 +16,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <maven.compiler.testRelease>8</maven.compiler.testRelease>
         <maven.compiler.release>16</maven.compiler.release>
         <mc-version>1.17.1-R0.1-SNAPSHOT</mc-version>
     </properties>
@@ -43,9 +44,14 @@
             <scope>provided</scope>
             <classifier>remapped-mojang</classifier>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+        <testSourceDirectory>../legacy-adapter-tests/src/test/java</testSourceDirectory>
         <resources>
             <resource>
                 <filtering>false</filtering>
@@ -58,6 +64,16 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <minecraft.version>${mc-version}</minecraft.version>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
