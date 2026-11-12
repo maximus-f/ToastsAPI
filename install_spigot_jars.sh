@@ -25,8 +25,9 @@ fi
 for toast_version in "$@"; do
   echo "Building Spigot $toast_version with BuildTools..."
   toast_args=(--rev "$toast_version")
-  # Minecraft 26.x ships unobfuscated; BuildTools no longer produces mapping jars.
-  if [[ "$toast_version" == 1.* ]]; then
+  # Mojang-mapped artifacts exist from 1.17 through 1.21.x. The 1.15/1.16
+  # adapters use versioned Spigot names; 26.x ships unobfuscated.
+  if [[ "$toast_version" =~ ^1\.([0-9]+)(\.|$) ]] && (( BASH_REMATCH[1] >= 17 )); then
     toast_args+=(--remapped)
   fi
   "$toast_java" -jar BuildTools.jar "${toast_args[@]}"

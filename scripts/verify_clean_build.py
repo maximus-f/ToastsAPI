@@ -28,7 +28,11 @@ def main():
     for module in modules:
         version = ET.parse(root / "NMS" / module.text / "pom.xml").findtext("m:properties/m:mc-version", namespaces=ns)
         if version:
-            required.extend(Path("org/spigotmc") / artifact / version for artifact in ("spigot", "minecraft-server"))
+            required.append(Path("org/spigotmc/spigot") / version)
+            # 1.15/1.16 use the plain, versioned server jar and have no separate
+            # minecraft-server mapping artifacts in BuildTools' Maven output.
+            if not version.startswith(("1.15.", "1.16.")):
+                required.append(Path("org/spigotmc/minecraft-server") / version)
     for path in required:
         if not (source / path).is_dir():
             parser.error(f"Missing BuildTools output: {source / path}. See README.md for the required revisions.")
