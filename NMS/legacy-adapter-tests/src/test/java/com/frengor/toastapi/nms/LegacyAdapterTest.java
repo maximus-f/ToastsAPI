@@ -66,6 +66,10 @@ public class LegacyAdapterTest {
         MinecraftKeyWrapper rootKey = MinecraftKeyWrapper.craft("toastapi_test", "root");
         MinecraftKeyWrapper toastKey = MinecraftKeyWrapper.craft("toastapi_test", "notification");
         assertEquals("toastapi_test:notification", toastKey.toString());
+        assertEquals("toastapi_test", toastKey.getNamespace());
+        assertEquals("notification", toastKey.getKey());
+        assertEquals(0, toastKey.compareTo(MinecraftKeyWrapper.craft("toastapi_test", "notification")));
+        assertTrue(toastKey.compareTo(rootKey) < 0);
         ItemStack icon = new ItemStack(Material.DIAMOND);
         for (AdvancementFrameTypeWrapper frame : new AdvancementFrameTypeWrapper[]{
                 AdvancementFrameTypeWrapper.TASK, AdvancementFrameTypeWrapper.GOAL, AdvancementFrameTypeWrapper.CHALLENGE}) {
