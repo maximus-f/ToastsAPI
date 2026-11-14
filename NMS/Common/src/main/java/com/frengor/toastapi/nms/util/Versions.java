@@ -9,7 +9,7 @@ import java.util.Optional;
 /** Maps only releases covered by the adapters included in the distribution. */
 public final class Versions {
 
-    public static final String SUPPORTED_RELEASES = "1.15–1.15.2, 1.16–1.16.5, 1.17–1.17.1, 1.18–1.18.2, 1.19.4, 1.20–1.20.6, 1.21–1.21.11, 26.1–26.1.2, 26.2, 26.3";
+    public static final String SUPPORTED_RELEASES = "1.15–1.15.2, 1.16–1.16.5, 1.17–1.17.1, 1.18–1.18.2, 1.19–1.19.2, 1.19.4, 1.20–1.20.6, 1.21–1.21.11, 26.1–26.1.2, 26.2, 26.3";
 
     /**
      * Gets the adapter for the current server.
@@ -59,6 +59,10 @@ public final class Versions {
                 return Optional.of("v1_18_R1");
             case "1.18.2":
                 return Optional.of("v1_18_R2");
+            case "1.19":
+            case "1.19.1":
+            case "1.19.2":
+                return Optional.of("v1_19_R1");
             case "1.19.4":
                 return Optional.of("v1_19_R3");
             case "1.20":

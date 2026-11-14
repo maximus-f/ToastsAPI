@@ -18,6 +18,7 @@ public class VersionsTest {
                 Map.entry("1.16.4", "v1_16_R3"), Map.entry("1.16.5", "v1_16_R3"),
                 Map.entry("1.17", "v1_17_R1"), Map.entry("1.17.1", "v1_17_R1"),
                 Map.entry("1.18", "v1_18_R1"), Map.entry("1.18.1", "v1_18_R1"), Map.entry("1.18.2", "v1_18_R2"),
+                Map.entry("1.19", "v1_19_R1"), Map.entry("1.19.1", "v1_19_R1"), Map.entry("1.19.2", "v1_19_R1"),
                 Map.entry("1.19.4", "v1_19_R3"),
                 Map.entry("1.20", "v1_20_R1"), Map.entry("1.20.1", "v1_20_R1"),
                 Map.entry("1.20.2", "v1_20_R2"),
@@ -43,7 +44,7 @@ public class VersionsTest {
     @Test
     public void rejectsUnbundledVersionsFutureReleasesAndMalformedInput() {
         for (String release : new String[]{null, "", "unknown", "1", "1.20.x", "1.20.0", "1.20.4.1",
-                "1.14.4", "1.15.3", "1.16.6", "1.17.2", "1.18.3", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.5", "1.20.7", "1.21.12", "1.21.99", "1.22",
+                "1.14.4", "1.15.3", "1.16.6", "1.17.2", "1.18.3", "1.19.3", "1.19.5", "1.20.7", "1.21.12", "1.21.99", "1.22",
                 "26", "26.0", "26.1.0", "26.1.3", "26.2.1", "26.3.1", "26.4", "27.1",
                 "1.21.5-pre1", "1.21.5-rc1", "1.21.5-pre1-R0.1-SNAPSHOT", "1.21.5-custom",
                 "26.3-pre1", "26.3-rc1", "26.3-pre1-R0.1-SNAPSHOT", "26.4-snapshot-7",
