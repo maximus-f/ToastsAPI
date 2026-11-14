@@ -23,7 +23,7 @@ public class PackagingIT {
     private static final String ORIGINAL = "com/frengor/toastapi/";
     private static final String RELOCATED = "com/frengor/toaststest/internal/toastapi/";
     private static final List<String> REVISIONS = List.of("v1_15_R1", "v1_16_R1", "v1_16_R2", "v1_16_R3",
-            "v1_17_R1", "v1_18_R1", "v1_18_R2", "v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
+            "v1_17_R1", "v1_18_R1", "v1_18_R2", "v1_19_R1", "v1_19_R2", "v1_19_R3", "v1_20_R1", "v1_20_R2", "v1_20_R3",
             "v1_20_R4", "v1_21_R1", "v1_21_R2", "v1_21_R3", "v1_21_R4",
             "v1_21_R5", "v1_21_R6", "v1_21_R7", "v26_1_R2", "v26_2_R1", "v26_3_R1");
 
@@ -132,7 +132,7 @@ public class PackagingIT {
             assertSame(loader, api.getClassLoader());
             Class<?> reflection = loader.loadClass(prefix + "nms.util.ReflectionUtil");
             Class<?> key = loader.loadClass(prefix + "nms.wrappers.MinecraftKeyWrapper");
-            String[] releases = {"1.15.2", "1.16.1", "1.16.3", "1.16.5", "1.17.1", "1.18.1", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5",
+            String[] releases = {"1.15.2", "1.16.1", "1.16.3", "1.16.5", "1.17.1", "1.18.1", "1.18.2", "1.19.2", "1.19.3", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.6", "1.21.1", "1.21.3", "1.21.4", "1.21.5",
                     "1.21.6", "1.21.9", "1.21.11", "26.1.2", "26.2", "26.3"};
             for (int i = 0; i < releases.length; i++) {
                 currentVersion[0] = releases[i];

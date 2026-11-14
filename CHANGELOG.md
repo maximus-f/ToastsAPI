@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+- Restore Minecraft 1.19–1.19.2 (`v1_19_R1`) and 1.19.3 (`v1_19_R2`) toast adapters from UAA 2.8.2 (`dfbcbb4`).
+- Include both adapters in the Spigot and Mojang-mapped NMS distributions, with Java 17 bytecode.
+- Close the 1.19 compatibility gap while retaining the existing explicit release allowlist.
+- Extend the shared packet tests to both adapters, covering all three toast frames, removal, rich text and partial progress; check their presence and relocation in the packaged artifacts.
+- Add 1.19.2 and 1.19.3 to the documented BuildTools prerequisites.
+
 ## 1.2.0
 
 - Restore Minecraft 1.15–1.15.2, 1.16–1.16.5, 1.17–1.17.1 and 1.18–1.18.2 adapters from UAA 2.8.2 (`dfbcbb4`).
