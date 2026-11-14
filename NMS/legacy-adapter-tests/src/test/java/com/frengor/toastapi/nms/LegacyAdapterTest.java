@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-/** Shared Java 8 test source, compiled against each 1.15–1.18 adapter's real server jar. */
+/** Shared Java 8 test source, compiled against each 1.15–1.19.3 adapter's real server jar. */
 public class LegacyAdapterTest {
     private static boolean versionedNms;
     private static String revision;
@@ -56,6 +56,14 @@ public class LegacyAdapterTest {
                         case "getItemFactory": return Class.forName(craft + "inventory.CraftItemFactory")
                                 .getMethod("instance").invoke(null);
                         case "getUnsafe": return Class.forName(craft + "util.CraftMagicNumbers").getField("INSTANCE").get(null);
+                        case "getRegistry":
+                            // Bukkit 1.19 initializes these with its item registries. Toasts do not use world generation.
+                            String type = ((Class<?>) args[0]).getName();
+                            if (type.equals("org.bukkit.generator.structure.Structure")
+                                    || type.equals("org.bukkit.generator.structure.StructureType")) {
+                                return null;
+                            }
+                            throw new UnsupportedOperationException("getRegistry: " + type);
                         default: throw new UnsupportedOperationException(method.getName());
                     }
                 }));
