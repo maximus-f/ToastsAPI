@@ -23,10 +23,6 @@ public class PacketPlayOutAdvancementsWrapper_v1_20_R3 extends PacketPlayOutAdva
 
     private final ClientboundUpdateAdvancementsPacket packet;
 
-    public PacketPlayOutAdvancementsWrapper_v1_20_R3() {
-        this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
-    }
-
     public PacketPlayOutAdvancementsWrapper_v1_20_R3(@NotNull Map<AdvancementWrapper, Integer> toSend) {
         Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());
         for (Map.Entry<AdvancementWrapper, Integer> e : toSend.entrySet()) {

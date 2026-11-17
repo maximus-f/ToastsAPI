@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Proxy;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -42,6 +43,28 @@ public class PackagingIT {
                             xpath.evaluate("/project/parent/version", pom));
                     assertEquals(artifacts[i], "0", xpath.evaluate(
                             "count(/project/dependencies/dependency[groupId='com.frengor'])", pom));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void distributionsStayCompactWithoutDroppingRuntimeResources() throws Exception {
+        assertTrue("Library exceeded its 320 KiB budget",
+                Files.size(Path.of(System.getProperty("library.jar"))) <= 320 * 1024);
+        for (String property : List.of("library.jar", "plugin.jar")) {
+            try (JarFile jar = new JarFile(System.getProperty(property))) {
+                assertFalse("Redundant directory records", jar.stream().anyMatch(e -> e.isDirectory()));
+                assertFalse("Internal build metadata leaked into the distribution", jar.stream()
+                        .anyMatch(e -> e.getName().startsWith("META-INF/maven/com.frengor/toastapi-nms-")));
+                assertFalse("Unused prepared advancement classes", jar.stream()
+                        .anyMatch(e -> e.getName().contains("PreparedAdvancementWrapper")));
+                assertNotNull(jar.getManifest());
+                for (String notice : List.of("LICENSE", "LGPL", "NOTICE")) {
+                    assertNotNull(notice, jar.getEntry(notice));
+                    try (var input = jar.getInputStream(jar.getEntry(notice))) {
+                        assertTrue(notice, input.readAllBytes().length > 0);
+                    }
                 }
             }
         }

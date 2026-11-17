@@ -87,7 +87,7 @@ public class AdvancementDisplayWrapper_v1_21_R4 extends AdvancementDisplayWrappe
     @Nullable
     public String getBackgroundTexture() {
         Optional<ClientAsset> r = display.getBackground();
-        return r.isEmpty() ? null : r.toString();
+        return r.map(texture -> texture.texturePath().toString()).orElse(null);
     }
 
     @Override

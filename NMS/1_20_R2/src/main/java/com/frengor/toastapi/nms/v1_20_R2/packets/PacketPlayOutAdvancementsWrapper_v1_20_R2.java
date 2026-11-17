@@ -21,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 public class PacketPlayOutAdvancementsWrapper_v1_20_R2 extends PacketPlayOutAdvancementsWrapper {
   private final ClientboundUpdateAdvancementsPacket packet;
   
-  public PacketPlayOutAdvancementsWrapper_v1_20_R2() {
-    this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
-  }
   
   public PacketPlayOutAdvancementsWrapper_v1_20_R2(@NotNull Map<AdvancementWrapper, Integer> toSend) {
     Map<ResourceLocation, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());

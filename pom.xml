@@ -72,6 +72,30 @@
         <defaultGoal>clean verify</defaultGoal>
         <pluginManagement>
             <plugins>
+                <!-- Opted into by the public library and test plugin after shading. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>compact-distribution</id>
+                            <phase>package</phase>
+                            <goals><goal>run</goal></goals>
+                            <configuration>
+                                <target>
+                                    <zip destfile="${project.build.directory}/${project.build.finalName}-compact.jar"
+                                         filesonly="true" level="9" encoding="UTF8" duplicate="fail">
+                                        <zipfileset src="${project.build.directory}/${project.build.finalName}.jar"
+                                                    excludes="META-INF/maven/com.frengor/toastapi-nms-*/**" />
+                                    </zip>
+                                    <move file="${project.build.directory}/${project.build.finalName}-compact.jar"
+                                          tofile="${project.build.directory}/${project.build.finalName}.jar" overwrite="true" />
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>

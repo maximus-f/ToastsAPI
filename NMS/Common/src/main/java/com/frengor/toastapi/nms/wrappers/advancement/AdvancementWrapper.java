@@ -4,7 +4,6 @@ import com.frengor.toastapi.nms.util.ReflectionUtil;
 import com.frengor.toastapi.nms.wrappers.AbstractWrapper;
 import com.frengor.toastapi.nms.wrappers.MinecraftKeyWrapper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.lang.reflect.Constructor;
@@ -15,7 +14,6 @@ import java.lang.reflect.Constructor;
 public abstract class AdvancementWrapper extends AbstractWrapper {
 
     private static Constructor<? extends AdvancementWrapper> rootAdvancementWrapperConstructor, baseAdvancementWrapperConstructor;
-    private MinecraftKeyWrapper key;
 
     static {
         Class<? extends AdvancementWrapper> clazz = ReflectionUtil.getWrapperClass(AdvancementWrapper.class);
@@ -68,22 +66,6 @@ public abstract class AdvancementWrapper extends AbstractWrapper {
      */
     @NotNull
     public abstract MinecraftKeyWrapper getKey();
-
-    /**
-     * Gets the parent advancement wrapper of this advancement. Returns {@code null} if this advancement is a root advancement.
-     *
-     * @return The parent advancement wrapper of this advancement, or {@code null} if this advancement is a root advancement.
-     */
-    @Nullable
-    public abstract AdvancementWrapper getParent();
-
-    /**
-     * Gets the display wrapper of this advancement.
-     *
-     * @return The display wrapper of this advancement.
-     */
-    @NotNull
-    public abstract AdvancementDisplayWrapper getDisplay();
 
     /**
      * Gets the maximum progression of this advancement.

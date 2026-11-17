@@ -24,10 +24,6 @@ public class PacketPlayOutAdvancementsWrapper_v1_21_R3 extends PacketPlayOutAdva
 
     private final ClientboundUpdateAdvancementsPacket packet;
 
-    public PacketPlayOutAdvancementsWrapper_v1_21_R3() {
-        this.packet = new ClientboundUpdateAdvancementsPacket(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
-    }
-
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_21_R3(@NotNull Map<AdvancementWrapper, Integer> toSend) {
         Map<ResourceLocation, AdvancementProgress> progressMap = Maps.newHashMapWithExpectedSize(toSend.size());

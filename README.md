@@ -12,6 +12,12 @@ The public Java package and Maven coordinates remain `com.frengor.toastapi` and 
 | `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.3.0.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
 | `NMS` | Internal adapter and distribution jars | Build inputs; do not install these in a server's plugins folder. |
 
+The library JAR is approximately **297 KiB** with all 24 adapters (about 17% smaller than the previous 358 KiB build). Its contents are the public toast API, shared runtime helpers, version adapters, its own Maven metadata and manifest, and the `LICENSE`, `LGPL`, and `NOTICE` files. The `/toast` command and `JavaPlugin` entry point belong only to `TestPlugin`.
+
+Packaging removes internal adapter Maven metadata and redundant ZIP directory entries, then compresses the final library and test-plugin JARs at level 9. This runs automatically during `package`, including IntelliJ's **Build JARs** configuration. Adapter classes are retained explicitly; do not enable Shade's `minimizeJar`, because adapters load through reflection. Packaging tests enforce a 320 KiB library budget and check all 24 adapters and the required resources.
+
+Unused prepared-advancement wrappers, reset-all-advancements packets, and internal parent/display accessors have been removed. The public `ToastAPI` and `AdvancementFrameType` API is unchanged; code that directly used the internal `com.frengor.toastapi.nms` wrappers may need updating. No telemetry is bundled.
+
 ## Supported releases
 
 Only these release versions are accepted. Future patches and prereleases are rejected rather than assigned an older adapter.
@@ -86,7 +92,7 @@ Then, with Maven running on JDK 25 or newer:
 mvn clean verify
 ```
 
-`verify` runs version-selection tests, constructs and encodes/decodes real advancement packets for all three toast styles against all nine 1.15–1.19.3 adapter targets and the six 1.21.6–26.3 adapter targets, and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. The adapter tests bootstrap Minecraft registries without starting a server or opening network ports. They do not verify client rendering or every patch release in each adapter group.
+`verify` runs version-selection tests, constructs and encodes/decodes real advancement packets for all three toast styles against **all 24 adapter targets**, and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. The adapter tests bootstrap Minecraft registries without starting a server or opening network ports. They do not verify client rendering or every patch release in each adapter group.
 
 To install the library for another local Maven project:
 
@@ -121,6 +127,69 @@ python3 scripts/verify_clean_build.py \
   --buildtools-repository /path/to/buildtools/maven-repository \
   --repository /path/to/empty/verification-repository
 ```
+
+### Automated server and bot tests
+
+In IntelliJ's run-configuration selector:
+
+- **Build JARs** runs the ordinary `clean verify` build and all adapter tests.
+- **Test Servers** builds and verifies the JARs, then tests Paper **1.19.4, 1.20.6, and 1.21.11**, sequentially. This is the shorter daily check across different protocol and plugin-remapping generations.
+- **Test All Servers** attempts one Paper release per adapter (the 24 compile targets). This is the slower release check. It **fails overall if any target fails or is unsupported**, so incomplete coverage cannot appear green.
+
+These shared configurations live in `.run/`. Reopen the project if IntelliJ has not loaded them. They use IntelliJ's bundled Java (25+ required). The server-tests profile runs only in the final `TestPlugin` module, after the normal packaging checks. Ordinary builds never launch a server.
+
+The runner downloads official Paper builds through the [Paper downloads service](https://docs.papermc.io/misc/downloads-service/), verifies their SHA-256 checksums, and caches the selected build metadata. It prefers stable builds; if a release has only development builds (currently 1.21.5), it uses the latest published build for the disposable test server and records its channel in the report. Each test uses a fresh world, a local-only port, offline authentication, and an operator bot. It checks plugin enablement, runs `/toast` for task/goal/challenge, and asserts the received title, frame, item icon/count, toast flag, parent, completed criteria, and subsequent removal packets. Startup failures, bot timeouts/disconnects, assertion failures, and server error logs fail the run. The runner stops each server before starting the next.
+
+The bot uses a pinned [minecraft-protocol](https://github.com/PrismarineJS/node-minecraft-protocol) dependency and an included npm lockfile. **26.2 and 26.3 currently lack protocol data** in that dependency and are reported as `UNSUPPORTED`; their Java packet tests still run. Patch-version aliases are accepted only when the protocol data explicitly records the same protocol number. A missing Paper download or Java installation is reported as a failure, not silently skipped. This matrix tests Paper; it does not claim coverage of every Spigot/fork/patch combination.
+
+Results are under `target/server-tests/<timestamp>/`:
+
+- `summary.md`: readable pass/fail table.
+- `summary.json`: exact server build and channel, server/plugin hashes, assertions, and failure details.
+- `junit.xml`: CI test results, with unsupported targets marked skipped.
+- `<version>/server.log`, `bot.log`, and `bot.json`: per-version evidence.
+
+The report survives ordinary `verify` builds; `clean` removes `target/`. Downloaded servers, local toolchains, and consent settings live in the Git-ignored `.test-tools/` directory. Delete a cached version's `servers/paper/<version>/build.json` to deliberately select a newer Paper build next time.
+
+#### First-time setup on another machine
+
+Python 3.9+, Node.js 22+ with npm, and the Java versions listed in the Build section are required. On macOS/Linux, the runner can download a checksum-verified Node 22.14.0 runtime into `.test-tools/node` if Node is absent. Java is selected from `JAVA_8_HOME`, `JAVA_16_HOME`, `JAVA_17_HOME`, `JAVA_21_HOME`, and `JAVA_25_HOME`, or the local settings below. Java 25 can also come from Maven's runtime for 26.x servers.
+
+Explicitly accept the [Minecraft EULA](https://aka.ms/MinecraftEULA) before launching test servers. Create `.test-tools/server-tests-local.json` locally (do not commit consent or machine paths):
+
+```json
+{
+  "acceptEula": true,
+  "javaHomes": {
+    "8": "/path/to/jdk8",
+    "16": "/path/to/jdk16",
+    "17": "/path/to/jdk17",
+    "21": "/path/to/jdk21"
+  }
+}
+```
+
+Only set `acceptEula` to `true` if you accept it. For the daily smoke suite, only the Java 17 and 21 server toolchains are needed, in addition to Java 25 running Maven. The runner's Python executable can be overridden with `-DserverTests.python=/path/to/python3` if IntelliJ cannot find it.
+
+Equivalent Maven commands, or values for a custom IntelliJ Maven configuration:
+
+```sh
+mvn verify -Pserver-tests
+mvn verify -Pserver-tests -DserverTests.versions=1.19.4,1.20.4
+mvn verify -Pserver-tests -DserverTests.versions=all
+```
+
+To test executable Spigot or other server JARs you have prepared yourself, run the Python runner with `--server-dir /path/to/jars`; it expects filenames such as `1.19.4.jar`. These must be runnable distributions with their dependencies, not the thin Maven compile artifacts:
+
+```sh
+python3 scripts/server-tests/run.py \
+  --plugin TestPlugin/target/toastapi-test-plugin-1.3.0.jar \
+  --versions 1.19.4 --server-dir /path/to/jars
+```
+
+Runner failure-handling tests: `python3 scripts/server-tests/test_runner.py`.
+
+**This verifies delivery and packet contents, not the rendered toast.** Use a real matching Minecraft client for visual checks of icons, formatting, animation, and timing.
 
 ## Embed the library
 

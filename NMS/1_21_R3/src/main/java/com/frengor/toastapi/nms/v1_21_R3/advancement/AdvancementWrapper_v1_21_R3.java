@@ -13,7 +13,6 @@ import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.critereon.ImpossibleTrigger;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ public class AdvancementWrapper_v1_21_R3 extends AdvancementWrapper {
 
     private final AdvancementHolder advancement;
     private final MinecraftKeyWrapper key;
-    private final AdvancementWrapper parent;
-    private final AdvancementDisplayWrapper display;
 
     public AdvancementWrapper_v1_21_R3(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
         Map<String, Criterion<?>> advCriteria = createSimpleCriteria();
@@ -34,8 +31,6 @@ public class AdvancementWrapper_v1_21_R3 extends AdvancementWrapper {
         Advancement adv = new Advancement(Optional.empty(), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, requirements, false, Optional.empty());
         this.advancement = new AdvancementHolder((ResourceLocation) key.toNMS(), adv);
         this.key = key;
-        this.parent = null;
-        this.display = display;
     }
 
     public AdvancementWrapper_v1_21_R3(@NotNull MinecraftKeyWrapper key, @NotNull AdvancementWrapper parent, @NotNull AdvancementDisplayWrapper display, @Range(from = 1, to = Integer.MAX_VALUE) int maxProgression) {
@@ -44,8 +39,6 @@ public class AdvancementWrapper_v1_21_R3 extends AdvancementWrapper {
         Advancement adv = new Advancement(Optional.of((ResourceLocation) parent.getKey().toNMS()), Optional.of((DisplayInfo) display.toNMS()), AdvancementRewards.EMPTY, advCriteria, requirements, false, Optional.empty());
         this.advancement = new AdvancementHolder((ResourceLocation) key.toNMS(), adv);
         this.key = key;
-        this.parent = parent;
-        this.display = display;
     }
 
     private static Map<String, Criterion<?>> createSimpleCriteria() {
@@ -65,16 +58,6 @@ public class AdvancementWrapper_v1_21_R3 extends AdvancementWrapper {
     @NotNull
     public MinecraftKeyWrapper getKey() {
         return key;
-    }
-
-    @Nullable
-    public AdvancementWrapper getParent() {
-        return parent;
-    }
-
-    @NotNull
-    public AdvancementDisplayWrapper getDisplay() {
-        return display;
     }
 
     @Override

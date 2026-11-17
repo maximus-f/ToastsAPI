@@ -14,16 +14,11 @@ import java.util.Set;
  */
 public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
 
-    private static Constructor<? extends PacketPlayOutAdvancementsWrapper> resetConstructor, sendConstructor, removeConstructor;
+    private static Constructor<? extends PacketPlayOutAdvancementsWrapper> sendConstructor, removeConstructor;
 
     static {
         Class<? extends PacketPlayOutAdvancementsWrapper> clazz = ReflectionUtil.getWrapperClass(PacketPlayOutAdvancementsWrapper.class);
         assert clazz != null : "Wrapper class is null.";
-        try {
-            resetConstructor = clazz.getDeclaredConstructor();
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
         try {
             sendConstructor = clazz.getDeclaredConstructor(Map.class);
         } catch (ReflectiveOperationException e) {
@@ -34,17 +29,6 @@ public abstract class PacketPlayOutAdvancementsWrapper implements ISendable {
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Creates a new {@code PacketPlayOutAdvancementsWrapper} which removes every previously sent advancement from the advancement GUI.
-     *
-     * @return A new {@code PacketPlayOutAdvancementsWrapper} which removes every previously sent advancement from the advancement GUI.
-     * @throws ReflectiveOperationException If reflections goes wrong.
-     */
-    @NotNull
-    public static PacketPlayOutAdvancementsWrapper craftResetPacket() throws ReflectiveOperationException {
-        return resetConstructor.newInstance();
     }
 
     /**

@@ -87,7 +87,7 @@ public class AdvancementDisplayWrapper_v1_20_R4 extends AdvancementDisplayWrappe
     @Nullable
     public String getBackgroundTexture() {
         Optional<ResourceLocation> r = display.getBackground();
-        return r.isEmpty() ? null : r.toString();
+        return r.map(ResourceLocation::toString).orElse(null);
     }
 
     @Override

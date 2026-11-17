@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "minecraft-data": "3.119.0",
+    "minecraft-protocol": "1.68.0",
+    "prismarine-nbt": "2.8.0"
+  },
+  "name": "toastsapi-server-tests",
+  "private": true,
+  "description": "Protocol assertions for disposable local Minecraft servers",
+  "engines": {
+    "node": ">=22"
+  }
+}

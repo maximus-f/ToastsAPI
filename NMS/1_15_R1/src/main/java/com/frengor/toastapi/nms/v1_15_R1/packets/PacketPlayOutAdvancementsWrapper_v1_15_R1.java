@@ -23,10 +23,6 @@ public class PacketPlayOutAdvancementsWrapper_v1_15_R1 extends PacketPlayOutAdva
 
     private final PacketPlayOutAdvancements packet;
 
-    public PacketPlayOutAdvancementsWrapper_v1_15_R1() {
-        this.packet = new PacketPlayOutAdvancements(true, Collections.emptyList(), Collections.emptySet(), Collections.emptyMap());
-    }
-
     @SuppressWarnings("unchecked")
     public PacketPlayOutAdvancementsWrapper_v1_15_R1(@NotNull Map<AdvancementWrapper, Integer> toSend) {
         Map<MinecraftKey, AdvancementProgress> map = Maps.newHashMapWithExpectedSize(toSend.size());

@@ -1,0 +1,26 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Test All Servers" type="MavenRunConfiguration" factoryName="Maven">
+    <MavenSettings>
+      <option name="myRunnerParameters">
+        <MavenRunnerParameters>
+          <option name="goals">
+            <list>
+              <option value="verify" />
+              <option value="-Pserver-tests" />
+              <option value="-DserverTests.versions=all" />
+            </list>
+          </option>
+          <option name="pomFileName" value="pom.xml" />
+          <option name="workingDirPath" value="$PROJECT_DIR$" />
+        </MavenRunnerParameters>
+      </option>
+      <option name="myRunnerSettings">
+        <MavenRunnerSettings>
+          <option name="jreName" value="#JAVA_INTERNAL" />
+          <option name="skipTests" value="false" />
+        </MavenRunnerSettings>
+      </option>
+    </MavenSettings>
+    <method v="2" />
+  </configuration>
+</component>
