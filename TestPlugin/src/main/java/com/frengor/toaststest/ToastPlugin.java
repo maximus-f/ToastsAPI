@@ -29,6 +29,7 @@ public class ToastPlugin extends JavaPlugin {
             return;
         }
 
+        ToastAPI.initialize(this);
         getLogger().info("ToastAPI Plugin enabled! Use /toast <type> [message] to test toast notifications.");
         getLogger().info("Supported types: task, goal, challenge");
     }

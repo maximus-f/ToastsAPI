@@ -7,6 +7,11 @@ import com.frengor.toastapi.nms.wrappers.advancement.AdvancementFrameTypeWrapper
 import com.frengor.toastapi.nms.wrappers.advancement.AdvancementWrapper;
 import com.frengor.toastapi.nms.wrappers.packets.PacketPlayOutAdvancementsWrapper;
 import com.google.common.base.Preconditions;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.Material;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,6 +30,47 @@ import java.util.Arrays;
 public class ToastAPI {
 
     private static final String ADV_DESCRIPTION = "\n§7A notification.";
+
+    private static final int BSTATS_ID = 35472;
+    // A literal outside our Java package stays identical after each host relocates the library.
+    private static final String METRICS_OWNER = "bstats:35472:toastapi-owner";
+
+    /**
+     * Starts the shared ToastsAPI metrics reporter using bStats' server-wide configuration.
+     * Call once from the embedding plugin's onEnable on the server thread.
+     *
+     * @param host The plugin embedding this library.
+     */
+    public static void initialize(@NotNull Plugin host) {
+        Preconditions.checkNotNull(host, "Host plugin is null.");
+        Preconditions.checkState(host.getServer().isPrimaryThread(), "Initialize ToastAPI on the server thread.");
+        Preconditions.checkState(host.isEnabled(), "Initialize ToastAPI from an enabled plugin.");
+        if (System.getProperty(METRICS_OWNER) != null) {
+            return;
+        }
+
+        try {
+            Metrics metrics = new Metrics(host, BSTATS_ID);
+            try {
+                host.getServer().getPluginManager().registerEvent(PluginDisableEvent.class, new Listener() {},
+                        EventPriority.MONITOR, (listener, event) -> {
+                            if (((PluginDisableEvent) event).getPlugin() == host) {
+                                try {
+                                    metrics.shutdown();
+                                } finally {
+                                    System.clearProperty(METRICS_OWNER);
+                                }
+                            }
+                        }, host);
+                System.setProperty(METRICS_OWNER, host.getName());
+            } catch (RuntimeException | LinkageError e) {
+                metrics.shutdown();
+                throw e;
+            }
+        } catch (RuntimeException | LinkageError e) {
+            host.getLogger().log(java.util.logging.Level.WARNING, "Could not initialize ToastsAPI metrics", e);
+        }
+    }
 
     /**
      * Checks whether this library includes an adapter for the current server release.

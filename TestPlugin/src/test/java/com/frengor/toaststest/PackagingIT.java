@@ -50,17 +50,21 @@ public class PackagingIT {
 
     @Test
     public void distributionsStayCompactWithoutDroppingRuntimeResources() throws Exception {
-        assertTrue("Library exceeded its 320 KiB budget",
-                Files.size(Path.of(System.getProperty("library.jar"))) <= 320 * 1024);
+        assertTrue("Library exceeded its 328 KiB budget",
+                Files.size(Path.of(System.getProperty("library.jar"))) <= 328 * 1024);
         for (String property : List.of("library.jar", "plugin.jar")) {
             try (JarFile jar = new JarFile(System.getProperty(property))) {
+                String metricsPackage = (property.equals("library.jar") ? ORIGINAL : RELOCATED) + "internal/bstats/";
+                assertNotNull(jar.getEntry(metricsPackage + "bukkit/Metrics.class"));
+                assertNotNull(jar.getEntry(metricsPackage + "MetricsBase.class"));
+                assertFalse(jar.stream().anyMatch(e -> e.getName().startsWith("org/bstats/")));
                 assertFalse("Redundant directory records", jar.stream().anyMatch(e -> e.isDirectory()));
                 assertFalse("Internal build metadata leaked into the distribution", jar.stream()
                         .anyMatch(e -> e.getName().startsWith("META-INF/maven/com.frengor/toastapi-nms-")));
                 assertFalse("Unused prepared advancement classes", jar.stream()
                         .anyMatch(e -> e.getName().contains("PreparedAdvancementWrapper")));
                 assertNotNull(jar.getManifest());
-                for (String notice : List.of("LICENSE", "LGPL", "NOTICE")) {
+                for (String notice : List.of("LICENSE", "LGPL", "NOTICE", "META-INF/licenses/bstats-MIT.txt")) {
                     assertNotNull(notice, jar.getEntry(notice));
                     try (var input = jar.getInputStream(jar.getEntry(notice))) {
                         assertTrue(notice, input.readAllBytes().length > 0);
