@@ -189,7 +189,9 @@ def run_one(version, args, config, node, directory):
         result['serverSha256'] = hashlib.sha256(jar.read_bytes()).hexdigest()
         port = free_port()
         result['port'] = port
-        (directory / 'plugins').mkdir()
+        # Disposable test servers should not contribute to the public usage dashboard.
+        (directory / 'plugins/bStats').mkdir(parents=True)
+        (directory / 'plugins/bStats/config.yml').write_text('enabled: false\n')
         shutil.copy2(args.plugin, directory / 'plugins/toastapi-test-plugin.jar')
         # Written only after explicit acceptance in local settings or --accept-eula.
         (directory / 'eula.txt').write_text('eula=true\n')

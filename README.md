@@ -12,11 +12,11 @@ The public Java package and Maven coordinates remain `com.frengor.toastapi` and 
 | `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.3.0.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
 | `NMS` | Internal adapter and distribution jars | Build inputs; do not install these in a server's plugins folder. |
 
-The library JAR is approximately **297 KiB** with all 24 adapters (about 17% smaller than the previous 358 KiB build). Its contents are the public toast API, shared runtime helpers, version adapters, its own Maven metadata and manifest, and the `LICENSE`, `LGPL`, and `NOTICE` files. The `/toast` command and `JavaPlugin` entry point belong only to `TestPlugin`.
+The library JAR is approximately **325 KiB** with all 24 adapters and the shaded bStats client. Its contents are the public toast API, shared runtime helpers, version adapters, its own Maven metadata and manifest, and the `LICENSE`, `LGPL`, and `NOTICE` files. The `/toast` command and `JavaPlugin` entry point belong only to `TestPlugin`.
 
-Packaging removes internal adapter Maven metadata and redundant ZIP directory entries, then compresses the final library and test-plugin JARs at level 9. This runs automatically during `package`, including IntelliJ's **Build JARs** configuration. Adapter classes are retained explicitly; do not enable Shade's `minimizeJar`, because adapters load through reflection. Packaging tests enforce a 320 KiB library budget and check all 24 adapters and the required resources.
+Packaging removes internal adapter Maven metadata and redundant ZIP directory entries, then compresses the final library and test-plugin JARs at level 9. This runs automatically during `package`, including IntelliJ's **Build JARs** configuration. Adapter classes are retained explicitly; do not enable Shade's `minimizeJar`, because adapters load through reflection. Packaging tests enforce a 328 KiB library budget and check all 24 adapters and the required resources.
 
-Unused prepared-advancement wrappers, reset-all-advancements packets, and internal parent/display accessors have been removed. The public `ToastAPI` and `AdvancementFrameType` API is unchanged; code that directly used the internal `com.frengor.toastapi.nms` wrappers may need updating. No telemetry is bundled.
+Unused prepared-advancement wrappers, reset-all-advancements packets, and internal parent/display accessors have been removed. Code that directly used the internal `com.frengor.toastapi.nms` wrappers may need updating. The library bundles bStats 3.2.1 under `com.frengor.toastapi.internal.bstats`. The test plugin initializes the reporter on enable.
 
 ## Supported releases
 
@@ -237,7 +237,9 @@ If you shade additional libraries, extend `artifactSet` to include them too. Do 
 
 ### Java usage
 
-Call from your plugin after the server has initialized, on the server thread:
+Call `ToastAPI.initialize(this)` in your plugin's `onEnable()` on the server thread. The first host to initialize owns the reporter for the ToastsAPI bStats dashboard (service ID 35472). The reporter honors `enabled: false` in `plugins/bStats/config.yml`. Disabling the owning plugin releases the reporter; the next initialization can start it again. The default plugin-version chart describes the reporting host.
+
+Send a toast on the server thread:
 
 ```java
 import com.frengor.toastapi.AdvancementFrameType;
