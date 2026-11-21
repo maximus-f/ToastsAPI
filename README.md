@@ -8,8 +8,8 @@ The public Java package and Maven coordinates remain `com.frengor.toastapi` and 
 
 | Module | Output | Purpose |
 | --- | --- | --- |
-| `ToastAPI` | `ToastAPI/target/toastapi-1.3.0.jar` | Shadeable library with all supported adapters. No `plugin.yml`, commands, or plugin entry point. |
-| `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-1.3.0.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
+| `ToastAPI` | `ToastAPI/target/toastapi-2.0.jar` | Shadeable library with all supported adapters. No `plugin.yml`, commands, or plugin entry point. |
+| `TestPlugin` | `TestPlugin/target/toastapi-test-plugin-2.0.jar` | Standalone `/toast` test plugin that embeds and relocates the library. |
 | `NMS` | Internal adapter and distribution jars | Build inputs; do not install these in a server's plugins folder. |
 
 The library JAR is approximately **325 KiB** with all 24 adapters and the shaded bStats client. Its contents are the public toast API, shared runtime helpers, version adapters, its own Maven metadata and manifest, and the `LICENSE`, `LGPL`, and `NOTICE` files. The `/toast` command and `JavaPlugin` entry point belong only to `TestPlugin`.
@@ -100,10 +100,10 @@ To install the library for another local Maven project:
 mvn clean install
 ```
 
-The release version is defined once as `<revision>1.3.0</revision>` in the root `pom.xml`. Every module inherits it through `${revision}`; dependencies between modules use `${project.version}`. To bump the release, change that one property. For a temporary build version:
+The release version is defined once as `<revision>2.0</revision>` in the root `pom.xml`. Every module inherits it through `${revision}`; dependencies between modules use `${project.version}`. To bump the release, change that one property. For a temporary build version:
 
 ```sh
-mvn -Drevision=1.3.1-SNAPSHOT clean install
+mvn -Drevision=2.1-SNAPSHOT clean install
 ```
 
 The [Flatten Maven Plugin](https://www.mojohaus.org/flatten-maven-plugin/) resolves the version before packaging, so installed/published POMs contain concrete parent versions and work in other projects. Generated `.flattened-pom.xml` files are ignored by Git and removed by `mvn clean`. This follows [Maven's CI-friendly version setup](https://maven.apache.org/guides/mini/guide-maven-ci-friendly.html).
@@ -183,7 +183,7 @@ To test executable Spigot or other server JARs you have prepared yourself, run t
 
 ```sh
 python3 scripts/server-tests/run.py \
-  --plugin TestPlugin/target/toastapi-test-plugin-1.3.0.jar \
+  --plugin TestPlugin/target/toastapi-test-plugin-2.0.jar \
   --versions 1.19.4 --server-dir /path/to/jars
 ```
 
@@ -199,7 +199,7 @@ After `mvn clean install`, add this dependency to your plugin:
 <dependency>
     <groupId>com.frengor</groupId>
     <artifactId>toastapi</artifactId>
-    <version>1.3.0</version>
+    <version>2.0</version>
 </dependency>
 ```
 
@@ -261,7 +261,7 @@ if (ToastAPI.isSupported()) {
 
 ## Test plugin
 
-Copy **only** `TestPlugin/target/toastapi-test-plugin-1.3.0.jar` into a supported server's `plugins/` directory and restart it. In game:
+Copy **only** `TestPlugin/target/toastapi-test-plugin-2.0.jar` into a supported server's `plugins/` directory and restart it. In game:
 
 ```text
 /toast task Quest completed!
