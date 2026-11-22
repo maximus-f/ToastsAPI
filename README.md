@@ -2,7 +2,7 @@
 
 A small Minecraft toast notification library extracted from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI). Shade it into a Bukkit/Spigot plugin to display a toast with an item icon, title, and task/goal/challenge frame. It does not require the UAA plugin, a database, or an advancement progression system.
 
-The public Java package and Maven coordinates remain `com.frengor.toastapi` and `com.frengor:toastapi` for compatibility.
+The public Java package is `com.frengor.toastapi`. The library is available on Maven Central as [`io.github.maximus-f:toastapi:2.0`](https://repo.maven.apache.org/maven2/io/github/maximus-f/toastapi/2.0/).
 
 ## Artifacts
 
@@ -94,7 +94,7 @@ mvn clean verify
 
 `verify` runs version-selection tests, constructs and encodes/decodes real advancement packets for all three toast styles against **all 24 adapter targets**, and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. The adapter tests bootstrap Minecraft registries without starting a server or opening network ports. They do not verify client rendering or every patch release in each adapter group.
 
-To install the library for another local Maven project:
+This command installs the library locally as `com.frengor:toastapi` for testing changes before a release.
 
 ```sh
 mvn clean install
@@ -193,11 +193,11 @@ Runner failure-handling tests: `python3 scripts/server-tests/test_runner.py`.
 
 ## Embed the library
 
-After `mvn clean install`, add this dependency to your plugin:
+Add the following Maven Central dependency to your plugin.
 
 ```xml
 <dependency>
-    <groupId>com.frengor</groupId>
+    <groupId>io.github.maximus-f</groupId>
     <artifactId>toastapi</artifactId>
     <version>2.0</version>
 </dependency>
@@ -221,7 +221,7 @@ Shade and relocate it into your plugin. Keep your own Bukkit/Paper API dependenc
         <!-- Adapters are loaded reflectively; minimization can remove them. -->
         <minimizeJar>false</minimizeJar>
         <artifactSet>
-            <includes><include>com.frengor:toastapi</include></includes>
+            <includes><include>io.github.maximus-f:toastapi</include></includes>
         </artifactSet>
         <relocations>
             <relocation>
@@ -276,3 +276,16 @@ The command accepts players only. Permission `toastapi.toast` defaults to operat
 The restored adapters for 1.15–1.19.3 and the adapters for 1.21.6–26.3 are adapted from UAA 2.8.2, commit [`dfbcbb4`](https://github.com/frengor/UltimateAdvancementAPI/tree/dfbcbb4c6988fe570eb63454833b65f0ea524ffa). Only the identifier, display, advancement, frame, packet and supporting utility classes are included. The restored 1.15/1.16 code is adjusted for Java 8. Version selection uses the CraftBukkit package revisions in actual Spigot jars: 1.16.2/1.16.3 use R2, and 1.16.4/1.16.5 use R3; this corrects the boundaries in that upstream version table.
 
 Derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, particularly its NMS wrappers and toast implementation. This project declares **LGPL-3.0-or-later** in its Maven metadata. See [LICENSE](LICENSE), [LGPL](LGPL), and [NOTICE](NOTICE); these notices are also included in the distributed library.
+
+## Maven Central publishing
+
+The public artifact uses `io.github.maximus-f:toastapi:2.0`. Its standalone consumer POM is in `central/pom.xml`. The Java packages stay the same. From the repository root, build with the prerequisites above and prepare a signed bundle:
+
+```sh
+mvn clean verify
+python3 central/bundle.py --signing-key YOUR_OPENPGP_FINGERPRINT
+```
+
+Upload the resulting `target/*-central.zip` in the [Central Publisher Portal](https://central.sonatype.com/publishing/deployments), review validation, and publish. The release signer must have a [discoverable public key](https://central.sonatype.org/publish/requirements/gpg/).
+
+To rehearse dependency resolution before publishing, run `python3 central/bundle.py --stage /path/to/test-repository` after the build. This writes the binary, sources, Javadoc, consumer POM and checksums into a fresh version directory using Maven's repository layout.
