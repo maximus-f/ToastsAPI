@@ -276,3 +276,16 @@ The command accepts players only. Permission `toastapi.toast` defaults to operat
 The restored adapters for 1.15–1.19.3 and the adapters for 1.21.6–26.3 are adapted from UAA 2.8.2, commit [`dfbcbb4`](https://github.com/frengor/UltimateAdvancementAPI/tree/dfbcbb4c6988fe570eb63454833b65f0ea524ffa). Only the identifier, display, advancement, frame, packet and supporting utility classes are included. The restored 1.15/1.16 code is adjusted for Java 8. Version selection uses the CraftBukkit package revisions in actual Spigot jars: 1.16.2/1.16.3 use R2, and 1.16.4/1.16.5 use R3; this corrects the boundaries in that upstream version table.
 
 Derived from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI) by fren_gor and EscanorTargaryen, particularly its NMS wrappers and toast implementation. This project declares **LGPL-3.0-or-later** in its Maven metadata. See [LICENSE](LICENSE), [LGPL](LGPL), and [NOTICE](NOTICE); these notices are also included in the distributed library.
+
+## Maven Central publishing
+
+The public artifact uses `io.github.maximus-f:toastapi:2.0`. Its standalone consumer POM is in `central/pom.xml`. The Java packages stay the same. From the repository root, build with the prerequisites above and prepare a signed bundle:
+
+```sh
+mvn clean verify
+python3 central/bundle.py --signing-key YOUR_OPENPGP_FINGERPRINT
+```
+
+Upload the resulting `target/*-central.zip` in the [Central Publisher Portal](https://central.sonatype.com/publishing/deployments), review validation, and publish. The release signer must have a [discoverable public key](https://central.sonatype.org/publish/requirements/gpg/).
+
+To rehearse dependency resolution before publishing, run `python3 central/bundle.py --stage /path/to/test-repository` after the build. This writes the binary, sources, Javadoc, consumer POM and checksums into a fresh version directory using Maven's repository layout.
