@@ -2,7 +2,7 @@
 
 A small Minecraft toast notification library extracted from [UltimateAdvancementAPI](https://github.com/frengor/UltimateAdvancementAPI). Shade it into a Bukkit/Spigot plugin to display a toast with an item icon, title, and task/goal/challenge frame. It does not require the UAA plugin, a database, or an advancement progression system.
 
-The public Java package and Maven coordinates remain `com.frengor.toastapi` and `com.frengor:toastapi` for compatibility.
+The public Java package is `com.frengor.toastapi`. The library is available on Maven Central as [`io.github.maximus-f:toastapi:2.0`](https://repo.maven.apache.org/maven2/io/github/maximus-f/toastapi/2.0/).
 
 ## Artifacts
 
@@ -94,7 +94,7 @@ mvn clean verify
 
 `verify` runs version-selection tests, constructs and encodes/decodes real advancement packets for all three toast styles against **all 24 adapter targets**, and checks the final library and test-plugin jars, including reflective adapter discovery after relocation. The adapter tests bootstrap Minecraft registries without starting a server or opening network ports. They do not verify client rendering or every patch release in each adapter group.
 
-To install the library for another local Maven project:
+This command installs the library locally as `com.frengor:toastapi` for testing changes before a release.
 
 ```sh
 mvn clean install
@@ -193,11 +193,11 @@ Runner failure-handling tests: `python3 scripts/server-tests/test_runner.py`.
 
 ## Embed the library
 
-After `mvn clean install`, add this dependency to your plugin:
+Add the following Maven Central dependency to your plugin.
 
 ```xml
 <dependency>
-    <groupId>com.frengor</groupId>
+    <groupId>io.github.maximus-f</groupId>
     <artifactId>toastapi</artifactId>
     <version>2.0</version>
 </dependency>
@@ -221,7 +221,7 @@ Shade and relocate it into your plugin. Keep your own Bukkit/Paper API dependenc
         <!-- Adapters are loaded reflectively; minimization can remove them. -->
         <minimizeJar>false</minimizeJar>
         <artifactSet>
-            <includes><include>com.frengor:toastapi</include></includes>
+            <includes><include>io.github.maximus-f:toastapi</include></includes>
         </artifactSet>
         <relocations>
             <relocation>
